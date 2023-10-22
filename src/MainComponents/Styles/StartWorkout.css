@@ -1,0 +1,33 @@
+/* This file styles the Start Workout page*/
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+.default-border {
+    border-width: 2px;
+    /* Border width */
+    border-style: solid;
+    /* Border style */
+    border-color: red;
+    /* Border color */
+}
+
+.mobile-page-format {
+    @apply flex flex-col mt-10;
+}
+
+.title {
+    @apply text-3xl font-bold mx-auto;
+}
+
+.start-workout-button {
+    @apply bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-10 w-9/12 mx-auto;
+}
+
+.add-templates-button {
+    @apply text-lg text-blue-500 bg-blue-100 px-4 rounded;
+}
+
+.templates-row {
+    @apply flex flex-row justify-around mt-10 font-bold
+}

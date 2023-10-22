@@ -1,24 +1,25 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import History from './MainComponents/History';
+import Nutrition from './MainComponents/Nutrition';
+import Profile from './MainComponents/Profile';
+import StartWorkout from './MainComponents/StartWorkout';
+import Schedule from './MainComponents/Schedule';
+import NotFound from './MainComponents/NotFound';
+import LogIn from './MainComponents/LogIn';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="" element={<LogIn />} />
+        <Route path="/StartWorkout" element={<StartWorkout />} />
+        <Route path="/History" element={<History />} />
+        <Route path="/Profile" element={<Profile />} />
+        <Route path="/Schedule" element={<Schedule />} />
+        <Route path="/Nutrition" element={<Nutrition />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </Router>
   );
 }
 
