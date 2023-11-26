@@ -1,4 +1,4 @@
-/* This file styles the NavBar page*/
+/* This file styles the NavBar */
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
@@ -12,10 +12,45 @@
     /* Border color */
 }
 
-.navbar {
-    @apply flex flex-row bg-gray-500 text-gray-400 w-full justify-around fixed bottom-0 w-full pt-2 pb-2;
+
+
+.nav-bar {
+    @apply flex items-center justify-between border-b border-gray-400 p-4
 }
 
-.navbar-button {
-    @apply font-bold py-2 px-4 rounded truncate text-xs;
+.logo {
+    @apply w-20 h-10
+}
+
+.menu {
+    @apply block h-1 w-8 animate-pulse bg-gray-600
+}
+
+.menu-options {
+    @apply flex flex-col items-center justify-between min-h-[250px]
+}
+
+.menu-option {
+    @apply border-b border-gray-400 my-8 uppercase font-bold text-lg
+}
+
+
+
+.hideMenuNav {
+    display: none;
+}
+
+.showMenuNav {
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    background: white;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
 }

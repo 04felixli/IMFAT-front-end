@@ -12,12 +12,12 @@
     /* Border color */
 }
 
-.mobile-page-format {
-    @apply flex flex-col mt-10;
+.page-format {
+    @apply flex flex-col mt-4;
 }
 
 .title {
-    @apply text-3xl font-bold mx-auto;
+    @apply text-3xl font-bold mx-auto mt-2;
 }
 
 .start-workout-button {
@@ -30,4 +30,8 @@
 
 .templates-row {
     @apply flex flex-row justify-around mt-10 font-bold
+}
+
+.hide-tracker {
+    display: none;
 }

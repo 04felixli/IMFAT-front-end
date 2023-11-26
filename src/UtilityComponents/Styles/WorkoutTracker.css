@@ -1,0 +1,17 @@
+/* This file styles the workout tracker table thing*/
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+.default-border {
+    border-width: 2px;
+    /* Border width */
+    border-style: solid;
+    /* Border style */
+    border-color: red;
+    /* Border color */
+}
+
+.workout-tracker {
+    @apply flex flex-col mx-auto text-black font-bold py-2 mt-10 w-9/12;
+}
