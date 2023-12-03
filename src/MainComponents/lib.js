@@ -2,8 +2,10 @@
 const url = process.env.REACT_APP_API_URL;
 
 // This function handles fetching exercises for exercise list
-export const getExercises = async (searchInput) => {
+export const fetchExercises = async (searchInput = '') => {
     try {
+        console.log("api url is: " + `${url}/api/get_exercises?searchInput=${searchInput}`)
+        
         const response = await fetch(`${url}/api/get_exercises?searchInput=${searchInput}`);
 
         if (!response.ok) {

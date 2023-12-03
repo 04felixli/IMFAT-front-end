@@ -2,24 +2,39 @@ import './Styles/ExerciseList.css';
 import { useState, useEffect } from 'react';
 import { add, format } from "date-fns";
 import GrayedBg from './GrayedBg';
-import { getExercises } from '../MainComponents/lib';
+import { fetchExercises } from '../MainComponents/lib';
 
 
 
 function ExerciseList({ isAddExerciseOpen, setIsAddExerciseOpen, exercisesList, addedExercises, setAddedExercises }) {
 
-
-    const [searchInput, setSearchInput] = useState('');
+    // Store the list of exercises
+    const [exercises, setExercises] = useState(null);
     const [selectedExercises, setSelectedExercises] = useState([]);
+    const [searchInput, setSearchInput] = useState('');
 
+    // get list of exercises on user input
     const handleSearchInput = (e) => {
+        fetchExercises(e.target.value).then((response) => {
+            setExercises(response);
+        });
+
         setSearchInput(e.target.value);
     };
+
+    // get initial list of exercises when component first loads
+    useEffect(() => {
+        console.log("Fetching initial list of exercises...")
+        fetchExercises().then((response) => {
+            setExercises(response);
+        });
+    }, []);
 
     const handleExerciseSelection = (exercise) => {
 
         const exerciseToFind = isSelected(exercise);
 
+        // unselect or select the exercise depending on if it is selected already or not
         exerciseToFind === null ?
             setSelectedExercises((prev) => [...prev, exercise]) :
             setSelectedExercises((prev) => prev.filter(item => item !== exerciseToFind));
@@ -27,7 +42,7 @@ function ExerciseList({ isAddExerciseOpen, setIsAddExerciseOpen, exercisesList, 
 
     const isSelected = (exercise) => {
         const exerciseToFind = selectedExercises.find(item => item.name === exercise.name
-            && item.targetMuscle === exercise.targetMuscle
+            && item.target_muscle === exercise.target_muscle
             && item.equipment === exercise.equipment);
 
         return exerciseToFind === undefined ? null : exerciseToFind;
@@ -38,7 +53,7 @@ function ExerciseList({ isAddExerciseOpen, setIsAddExerciseOpen, exercisesList, 
             ...prev,
             ...selectedExercises.filter(
                 (selectedExercise) => !prev.some((addedExercise) => addedExercise.name === selectedExercise.name
-                    && addedExercise.targetMuscle === selectedExercise.targetMuscle
+                    && addedExercise.target_muscle === selectedExercise.target_muscle
                     && addedExercise.equipment === selectedExercise.equipment)
             )
         ]);
@@ -107,23 +122,31 @@ function ExerciseList({ isAddExerciseOpen, setIsAddExerciseOpen, exercisesList, 
             </div>
 
             <ul className='w-full mt-5'>
-                {exercisesList.map((exercise, index) => (
-                    <li key={index} className={`border px-4 ${isSelected(exercise) ? 'bg-blue-100' : ''}`} onClick={() => handleExerciseSelection(exercise)}>
-                        <div className='flex flex-row justify-between'>
-                            <div>
-                                {exercise.name}
-                            </div>
+                {
+                    !exercises ? (
+                        <li>Loading...</li>
+                    ) : exercises.length !== 0 ? (
+                        exercises.map((exercise, index) => (
+                            <li key={index} className={`border px-4 ${isSelected(exercise) ? 'bg-blue-100' : ''}`} onClick={() => handleExerciseSelection(exercise)}>
+                                <div className='flex flex-row justify-between'>
+                                    <div>
+                                        {exercise.name}
+                                    </div>
 
-                            <div>
-                                {'(' + exercise.equipiment + ')'}
-                            </div>
-                        </div>
+                                    <div>
+                                        {'(' + exercise.equipment + ')'}
+                                    </div>
+                                </div>
 
-                        <div className='text-gray-700 font-normal'>
-                            {exercise.targetMuscle ? exercise.targetMuscle : ''}
-                        </div>
-                    </li>
-                ))}
+                                <div className='text-gray-700 font-normal'>
+                                    {exercise.target_muscle ? exercise.target_muscle : ''}
+                                </div>
+                            </li>
+                        ))
+                    ) : (
+                        <li>Could not find "{searchInput}"</li>
+                    )
+                }
             </ul>
         </div>
     )
