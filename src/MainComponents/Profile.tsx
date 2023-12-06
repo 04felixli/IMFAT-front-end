@@ -1,6 +1,7 @@
 // This is the Profile page component. It stores users personal data, along with tracking metrics for workouts (1RM, etc.) 
+import React from "react";
 
-function Profile() {
+const Profile = () => {
     return (
         <div>
             Profile Page

@@ -1,3 +1,4 @@
+import React from 'react';
 import './Styles/WorkoutTracker.css';
 import { useState, useEffect } from 'react';
 import { format } from "date-fns";
@@ -6,7 +7,7 @@ import WorkoutHeader from './WorkoutHeader';
 import ExerciseList from './ExerciseList';
 import GrayedBg from './GrayedBg';
 import Exercise from './Exercise';
-
+import ModelExerciseInList from '../Models/ModelExerciseInList';
 
 function WorkoutTracker() {
 
@@ -16,15 +17,13 @@ function WorkoutTracker() {
     { name: "Bent Over Row", targetMuscle: "Back", equipiment: "Barbell", weightUnit: "lbs" }];
 
     // This array holds a list of selected exercises by the user
-    const [addedExercises, setAddedExercises] = useState([]);
+    const [addedExercises, setAddedExercises] = useState<ModelExerciseInList[]>([]);
 
     // is exercise list open 
-    const [isAddExerciseOpen, setIsAddExerciseOpen] = useState(false);
+    const [isAddExerciseOpen, setIsAddExerciseOpen] = useState<boolean>(false);
 
     // A pop-up window to ask the user if they are sure before removing an exercise
-    const [isConfirmRemoveExerciseOpen, setIsConfirmRemoveExerciseOpen] = useState(false);
-
-
+    const [isConfirmRemoveExerciseOpen, setIsConfirmRemoveExerciseOpen] = useState<boolean>(false);
 
     return (
         <div className="workout-tracker" >
@@ -45,7 +44,6 @@ function WorkoutTracker() {
 
             <ExerciseList isAddExerciseOpen={isAddExerciseOpen}
                 setIsAddExerciseOpen={setIsAddExerciseOpen}
-                exercisesList={exercisesList}
                 addedExercises={addedExercises}
                 setAddedExercises={setAddedExercises}
             />
@@ -53,12 +51,6 @@ function WorkoutTracker() {
             <button className='text-blue-500 bg-blue-100 px-4 rounded mt-10' onClick={(() => setIsAddExerciseOpen(true))}>Add Exercise</button>
             <button className='text-green-500 bg-green-100 px-4 rounded mt-10'>Finish Workout</button>
             <button className=' text-red-500 bg-red-100 px-4 rounded mt-3'>Cancel Workout</button>
-
-
-
-
-
-
 
         </div >
     )

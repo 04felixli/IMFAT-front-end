@@ -1,3 +1,4 @@
+import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import History from './MainComponents/History';
 import Nutrition from './MainComponents/Nutrition';
@@ -7,11 +8,11 @@ import Schedule from './MainComponents/Schedule';
 import NotFound from './MainComponents/NotFound';
 import LogIn from './MainComponents/LogIn';
 
-function App() {
+const App: React.FC = () => {
   return (
     <Router>
       <Routes>
-        <Route path="" element={<LogIn />} />
+        <Route path="/" element={<LogIn />} />
         <Route path="/StartWorkout" element={<StartWorkout />} />
         <Route path="/History" element={<History />} />
         <Route path="/Profile" element={<Profile />} />

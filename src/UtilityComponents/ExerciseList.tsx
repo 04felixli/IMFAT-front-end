@@ -1,20 +1,27 @@
+import React from 'react';
 import './Styles/ExerciseList.css';
 import { useState, useEffect } from 'react';
 import { add, format } from "date-fns";
 import GrayedBg from './GrayedBg';
 import { fetchExercises } from '../MainComponents/lib';
+import ModelExerciseInList from '../Models/ModelExerciseInList';
 
+interface Props {
+    isAddExerciseOpen: boolean;
+    setIsAddExerciseOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    addedExercises: ModelExerciseInList[];
+    setAddedExercises: React.Dispatch<React.SetStateAction<ModelExerciseInList[]>>;
+}
 
-
-function ExerciseList({ isAddExerciseOpen, setIsAddExerciseOpen, exercisesList, addedExercises, setAddedExercises }) {
+const ExerciseList = ({ isAddExerciseOpen, setIsAddExerciseOpen, addedExercises, setAddedExercises }: Props) => {
 
     // Store the list of exercises
-    const [exercises, setExercises] = useState(null);
-    const [selectedExercises, setSelectedExercises] = useState([]);
-    const [searchInput, setSearchInput] = useState('');
+    const [exercises, setExercises] = useState<ModelExerciseInList[] | null>(null) // "exercises" = null when first fetching data, [] when api doesn't find any exercises
+    const [selectedExercises, setSelectedExercises] = useState<ModelExerciseInList[]>([]);
+    const [searchInput, setSearchInput] = useState<string>('');
 
     // get list of exercises on user input
-    const handleSearchInput = (e) => {
+    const handleSearchInput = (e: React.ChangeEvent<HTMLInputElement>): void => {
         fetchExercises(e.target.value).then((response) => {
             setExercises(response);
         });
@@ -30,9 +37,9 @@ function ExerciseList({ isAddExerciseOpen, setIsAddExerciseOpen, exercisesList, 
         });
     }, []);
 
-    const handleExerciseSelection = (exercise) => {
+    const handleExerciseSelection = (exercise: ModelExerciseInList): void => {
 
-        const exerciseToFind = isSelected(exercise);
+        const exerciseToFind: ModelExerciseInList | null = isSelected(exercise);
 
         // unselect or select the exercise depending on if it is selected already or not
         exerciseToFind === null ?
@@ -40,21 +47,17 @@ function ExerciseList({ isAddExerciseOpen, setIsAddExerciseOpen, exercisesList, 
             setSelectedExercises((prev) => prev.filter(item => item !== exerciseToFind));
     }
 
-    const isSelected = (exercise) => {
-        const exerciseToFind = selectedExercises.find(item => item.name === exercise.name
-            && item.target_muscle === exercise.target_muscle
-            && item.equipment === exercise.equipment);
+    const isSelected = (exercise: ModelExerciseInList): ModelExerciseInList | null => {
+        const exerciseToFind: ModelExerciseInList | undefined = selectedExercises.find(item => item.id === exercise.id);
 
         return exerciseToFind === undefined ? null : exerciseToFind;
     }
 
-    const handleAddExercise = () => {
+    const handleAddExercise = (): void => {
         setAddedExercises((prev) => [
             ...prev,
             ...selectedExercises.filter(
-                (selectedExercise) => !prev.some((addedExercise) => addedExercise.name === selectedExercise.name
-                    && addedExercise.target_muscle === selectedExercise.target_muscle
-                    && addedExercise.equipment === selectedExercise.equipment)
+                (selectedExercise) => !prev.some((addedExercise) => addedExercise.id === selectedExercise.id)
             )
         ]);
 

@@ -1,16 +1,17 @@
 // This file handles User Log - Ins and redirects to the sign-up page if user doesn't have an account
+import React from "react";
 import { useState } from "react";
 
-function LogIn() {
+const LogIn = () => {
     const [inputUserNameValue, setInputUserNameValue] = useState('');
 
-    const handleInputUserNameChange = (e) => {
+    const handleInputUserNameChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         setInputUserNameValue(e.target.value);
     };
 
     const [inputPasswordValue, setInputPasswordValue] = useState('');
 
-    const handleInputPasswordChange = (e) => {
+    const handleInputPasswordChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         setInputPasswordValue(e.target.value);
     };
 

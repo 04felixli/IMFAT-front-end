@@ -1,6 +1,7 @@
 // This is the schedule page component. It stores the users workout schedule. 
+import React from "react";
 
-function Schedule() {
+const Schedule = () => {
     return (
         <div>
             Schedule Page

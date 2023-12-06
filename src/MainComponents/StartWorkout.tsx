@@ -1,15 +1,14 @@
 // This is the "main page" component. Users can start their workouts from here. 
-
+import React from 'react';
 import './Styles/StartWorkout.css';
 import NavBar from '../UtilityComponents/NavBar';
 import WorkoutTracker from '../UtilityComponents/WorkoutTracker';
 import { useState } from 'react';
 
-
-function StartWorkout() {
+const StartWorkout = () => {
 
     // Keep track of if a workout is started or not
-    const [isStarted, setIsStarted] = useState(false);
+    const [isStarted, setIsStarted] = useState<boolean>(false);
 
     return (
         <div className="page-format">
@@ -29,16 +28,13 @@ function StartWorkout() {
                 <button className="add-templates-button">+Template</button>
             </div>
 
-
-
-
         </div>
 
     )
 }
 
 // This function returns the time of the workout
-function getTimeOfDay() {
+const getTimeOfDay = ():string => {
     const now = new Date();
     const currentHour = now.getHours();
 
@@ -51,6 +47,7 @@ function getTimeOfDay() {
     } else {
         return "Night";
     }
-}
+};
+
 
 export default StartWorkout; 

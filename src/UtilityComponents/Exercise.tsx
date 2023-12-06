@@ -1,15 +1,21 @@
 // This component renders the exercise tracking (eg. sets, reps, weight)
-
+import React from "react";
 import { add } from "date-fns";
 import { useState, useEffect } from "react";
 import ConfirmRemoveExercise from "./ConfirmRemoveExercise";
+import ModelExerciseInList from "../Models/ModelExerciseInList";
 
-function Exercise({ addedExercises, setAddedExercises, isConfirmRemoveExerciseOpen, setIsConfirmRemoveExerciseOpen }) {
+interface Props {
+    isConfirmRemoveExerciseOpen: boolean;
+    setIsConfirmRemoveExerciseOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    addedExercises: ModelExerciseInList[];
+    setAddedExercises: React.Dispatch<React.SetStateAction<ModelExerciseInList[]>>;
+}
+
+const Exercise = ({ addedExercises, setAddedExercises, isConfirmRemoveExerciseOpen, setIsConfirmRemoveExerciseOpen }: Props) => {
 
     // An array of arrays holding objects for each exercise and its sets. Each set object has a set number, weight, and reps. 
     const [exerciseSets, setExerciseSets] = useState([]);
-
-
 
     // Update exercise sets when user adds new exercises
     useEffect(() => {
@@ -53,7 +59,7 @@ function Exercise({ addedExercises, setAddedExercises, isConfirmRemoveExerciseOp
         setExerciseSets(updatedExerciseSets);
     };
 
-    const handleWeightUnitChange = (exerciseIndex) => {
+    const handleWeightUnitChange = (exerciseIndex: number) => {
         const updatedAddedExercises = [...addedExercises];
         updatedAddedExercises[exerciseIndex].weightUnit === 'lbs' ? updatedAddedExercises[exerciseIndex].weightUnit = 'kg' : updatedAddedExercises[exerciseIndex].weightUnit = 'lbs';
         setAddedExercises(updatedAddedExercises);

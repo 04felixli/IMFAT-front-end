@@ -1,6 +1,7 @@
 // This is the Nutrition page component. It will store data about the users nutrition for every day they track it. 
+import React from "react";
 
-function Nutrition() {
+const Nutrition = () => {
     return (
         <div>
             Nutrition Page

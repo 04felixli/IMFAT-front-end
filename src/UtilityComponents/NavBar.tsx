@@ -1,11 +1,12 @@
 // This component returns a hamburger drop down menu for mobile screens instead of nav bar 
+import React from 'react';
 import './Styles/NavBar.css';
 import { Link } from 'react-router-dom';
 
 import { useState } from "react";
 
-export default function NavBar() {
-    const [isNavOpen, setIsNavOpen] = useState(false);
+const NavBar = () => {
+    const [isNavOpen, setIsNavOpen] = useState<boolean>(false);
 
     return (
         <div className="nav-bar">
@@ -82,4 +83,6 @@ export default function NavBar() {
         </div>
     );
 }
+
+export default NavBar; 
 

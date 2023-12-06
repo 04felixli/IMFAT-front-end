@@ -1,8 +1,15 @@
 import React, { useState, useEffect } from 'react';
 
-function GrayedBg({ isAddExerciseOpen, setIsAddExerciseOpen, isConfirmRemoveExerciseOpen, setIsConfirmExerciseOpen }) {
+interface Props {
+    isAddExerciseOpen: boolean;
+    setIsAddExerciseOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    isConfirmRemoveExerciseOpen: boolean;
+    setIsConfirmExerciseOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
-    const [arePopUpsOpen, setArePopUpsOpen] = useState(false);
+const GrayedBg = ({ isAddExerciseOpen, setIsAddExerciseOpen, isConfirmRemoveExerciseOpen, setIsConfirmExerciseOpen }: Props) => {
+
+    const [arePopUpsOpen, setArePopUpsOpen] = useState<boolean>(false);
 
     useEffect(() => {
         if (isAddExerciseOpen || isConfirmRemoveExerciseOpen) {
