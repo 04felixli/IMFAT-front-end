@@ -1,77 +1,131 @@
 // This component renders the exercise tracking (eg. sets, reps, weight)
 import React from "react";
 import { add } from "date-fns";
-import { useState, useEffect } from "react";
-import ConfirmRemoveExercise from "./ConfirmRemoveExercise";
+import { useState, useEffect, useRef } from "react";
+// import ConfirmRemoveExercise from "./ConfirmRemoveExercise";
 import ModelExerciseInList from "../Models/ModelExerciseInList";
+import ModelExercise from "../Models/ModelExercise";
+import { fetchAutoFillInfo } from "../MainComponents/lib";
+import ModelSet from "../Models/ModelSet";
 
 interface Props {
     isConfirmRemoveExerciseOpen: boolean;
     setIsConfirmRemoveExerciseOpen: React.Dispatch<React.SetStateAction<boolean>>;
     addedExercises: ModelExerciseInList[];
     setAddedExercises: React.Dispatch<React.SetStateAction<ModelExerciseInList[]>>;
+    addedExerciseIds: number[];
+    setAddedExerciseIds: React.Dispatch<React.SetStateAction<number[]>>;
 }
 
-const Exercise = ({ addedExercises, setAddedExercises, isConfirmRemoveExerciseOpen, setIsConfirmRemoveExerciseOpen }: Props) => {
+const Exercise = ({ addedExercises, setAddedExercises, isConfirmRemoveExerciseOpen, setIsConfirmRemoveExerciseOpen, addedExerciseIds, setAddedExerciseIds }: Props) => {
 
-    // An array of arrays holding objects for each exercise and its sets. Each set object has a set number, weight, and reps. 
-    const [exerciseSets, setExerciseSets] = useState([]);
+    // array of exercises with sets 
+    const [exercises, setExercises] = useState<ModelExercise[]>([]);
 
-    // Update exercise sets when user adds new exercises
+    // Copy of above to hold previous values 
+    const [oldExercises, setOldExercises] = useState<ModelExercise[]>([]);
+
+    // Auto fill exercise info 
     useEffect(() => {
-        if (addedExercises.length !== 0) {
+        console.log("Auto filling exercises...")
+        fetchAutoFillInfo(addedExerciseIds).then((response) => {
+            setOldExercises(response);
+            setExercises(response);
+        });
+    }, [addedExerciseIds]);
 
-            const exercisesToAdd = addedExercises.filter(exercise =>
-                !exerciseSets.some(existingExercise =>
-                    existingExercise.some(set =>
-                        set.name === exercise.name
-                    )
-                )
-            );
+    useEffect(() => {
+        console.log(exercises)
+    }, [exercises]);
 
-            const newExerciseSets = exercisesToAdd.map(exercise => [{
-                name: exercise.name,
-                setNum: 1,
-                weight: '',
-                reps: ''
-            }]);
+    // // An array of arrays holding objects for each exercise and its sets. Each set object has a set number, weight, and reps. 
+    // const [exerciseSets, setExerciseSets] = useState([]);
 
-            setExerciseSets(prev => [...prev, ...newExerciseSets]);
-        }
-    }, [addedExercises]);
+    // // Update exercise sets when user adds new exercises
+    // useEffect(() => {
+    //     if (addedExercises.length !== 0) {
 
-    const addSet = (exerciseName, exerciseIndex) => {
-        const newExerciseSets = [...exerciseSets];
-        const prevNumSets = newExerciseSets[exerciseIndex].length;
-        newExerciseSets[exerciseIndex] = [...newExerciseSets[exerciseIndex], { name: exerciseName, setNum: (prevNumSets + 1), weight: '', reps: '' }];
-        setExerciseSets(newExerciseSets);
+    //         const exercisesToAdd = addedExercises.filter(exercise =>
+    //             !exerciseSets.some(existingExercise =>
+    //                 existingExercise.some(set =>
+    //                     set.name === exercise.name
+    //                 )
+    //             )
+    //         );
+
+    //         const newExerciseSets = exercisesToAdd.map(exercise => [{
+    //             name: exercise.name,
+    //             setNum: 1,
+    //             weight: '',
+    //             reps: ''
+    //         }]);
+
+    //         setExerciseSets(prev => [...prev, ...newExerciseSets]);
+    //     }
+    // }, [addedExercises]);
+
+    const addSet = (exerciseIndex: number) => {
+        setExercises(prevExercises => {
+
+            const exercisesCopy: ModelExercise[] = prevExercises.map(exercise => ({ ...exercise }));
+
+            const weight_unit: string = exercisesCopy[exerciseIndex].sets[0].weight_unit;
+            const set_number: number = exercisesCopy[exerciseIndex].sets.length + 1;
+
+            const set: ModelSet = {
+                weight: -1,
+                reps: -1,
+                weight_unit: weight_unit,
+                set_number: set_number
+            }
+
+            exercisesCopy[exerciseIndex].sets = [...exercisesCopy[exerciseIndex].sets, set];
+
+            return exercisesCopy;
+        });
     };
 
-    const handleWeightChange = (exerciseIndex, setIndex, value) => {
-        const updatedExerciseSets = [...exerciseSets];
-        updatedExerciseSets[exerciseIndex][setIndex].weight = value;
-        setExerciseSets(updatedExerciseSets);
+    const handleWeightChange = (set: ModelSet, exerciseIndex: number, setIndex: number, value: string) => {
+        setExercises(prevExercises => {
+
+            const exercisesCopy: ModelExercise[] = prevExercises.map(exercise => ({ ...exercise }));
+
+            exercisesCopy[exerciseIndex].sets[setIndex].weight = value === '' ? -1 : parseInt(value);
+
+            return exercisesCopy
+        });
+
     };
 
-    const handleRepsChange = (exerciseIndex, setIndex, value) => {
-        const updatedExerciseSets = [...exerciseSets];
-        updatedExerciseSets[exerciseIndex][setIndex].reps = value;
-        setExerciseSets(updatedExerciseSets);
+    const handleRepsChange = (set: ModelSet, exerciseIndex: number, setIndex: number, value: string) => {
+
+        setExercises(prevExercises => {
+
+            const exercisesCopy: ModelExercise[] = prevExercises.map(exercise => ({ ...exercise }));
+
+            exercisesCopy[exerciseIndex].sets[setIndex].reps = value === '' ? -1 : parseInt(value);
+
+            return exercisesCopy
+        });
+
     };
 
-    const handleWeightUnitChange = (exerciseIndex: number) => {
-        const updatedAddedExercises = [...addedExercises];
-        updatedAddedExercises[exerciseIndex].weightUnit === 'lbs' ? updatedAddedExercises[exerciseIndex].weightUnit = 'kg' : updatedAddedExercises[exerciseIndex].weightUnit = 'lbs';
-        setAddedExercises(updatedAddedExercises);
+    const handleWeightUnitChange = (exercise: ModelExercise, exerciseIndex: number) => {
+
+        exercise.sets[0].weight_unit = (exercise.sets[0].weight_unit === 'lbs' ? 'kg' : 'lbs');
+
+        // const updatedAddedExercises = [...addedExercises];
+        // updatedAddedExercises[exerciseIndex].weightUnit === 'lbs' ? updatedAddedExercises[exerciseIndex].weightUnit = 'kg' : updatedAddedExercises[exerciseIndex].weightUnit = 'lbs';
+        // setAddedExercises(updatedAddedExercises);
     }
 
-    const handleRemoveExercise = (exerciseIndex) => {
-        const updatedAddedExercises = addedExercises.filter((_, index) => index !== exerciseIndex);
-        const updatedExerciseSets = exerciseSets.filter((_, index) => index !== exerciseIndex);
+    // const handleRemoveExercise = (exerciseIndex) => {
+    //     const updatedAddedExercises = addedExercises.filter((_, index) => index !== exerciseIndex);
+    //     const updatedExerciseSets = exerciseSets.filter((_, index) => index !== exerciseIndex);
 
-        setAddedExercises(updatedAddedExercises);
-        setExerciseSets(updatedExerciseSets);
-    }
+    //     setAddedExercises(updatedAddedExercises);
+    //     setExerciseSets(updatedExerciseSets);
+    // }
 
     // useEffect(() => {
     //     console.log("Exercise Sets ", exerciseSets);
@@ -83,8 +137,8 @@ const Exercise = ({ addedExercises, setAddedExercises, isConfirmRemoveExerciseOp
 
 
     return (
-        <div className={addedExercises ? 'flex flex-col mt-5' : 'hidden'}>
-            {addedExercises.map((exercise, exerciseIndex) => (
+        <div className={exercises ? 'flex flex-col mt-5' : 'hidden'}>
+            {exercises.map((exercise, exerciseIndex) => (
                 <div key={exerciseIndex} className='flex flex-col mt-5'>
 
                     <div className="flex flex-row justify-between text-blue-500">
@@ -94,9 +148,9 @@ const Exercise = ({ addedExercises, setAddedExercises, isConfirmRemoveExerciseOp
 
                         <div className="flex flex-row space-x-5">
                             <button className="text-sm text-blue-500 bg-blue-100 rounded-full h-6 w-6 flex items-center justify-center focus:outline-none"
-                                onClick={() => handleWeightUnitChange(exerciseIndex)}
+                                onClick={() => handleWeightUnitChange(exercise, exerciseIndex)}
                             >
-                                {exercise.weightUnit}
+                                {exercise.sets[0].weight_unit}
                             </button>
 
                             <button className="text-sm bg-blue-100 rounded-full h-6 w-6 flex items-center justify-center focus:outline-none">
@@ -119,14 +173,14 @@ const Exercise = ({ addedExercises, setAddedExercises, isConfirmRemoveExerciseOp
                                 {'❌'}
                             </button>
 
-                            <ConfirmRemoveExercise exerciseIndex={exerciseIndex}
+                            {/* <ConfirmRemoveExercise exerciseIndex={exerciseIndex}
                                 isConfirmRemoveExerciseOpen={isConfirmRemoveExerciseOpen}
                                 setIsConfirmRemoveExerciseOpen={setIsConfirmRemoveExerciseOpen}
                                 addedExercises={addedExercises}
                                 setAddedExercises={setAddedExercises}
-                                exerciseSets={exerciseSets}
-                                setExerciseSets={setExerciseSets}
-                            />
+                                // exerciseSets={exerciseSets}
+                                // setExerciseSets={setExerciseSets}
+                            /> */}
 
                         </div>
                     </div>
@@ -136,38 +190,40 @@ const Exercise = ({ addedExercises, setAddedExercises, isConfirmRemoveExerciseOp
                         <div>Previous</div>
 
                         <div className="flex flex-row space-x-5">
-                            <div>{exercise.weightUnit}</div>
+                            <div>{exercise.sets[0].weight_unit}</div>
                             <div>Reps</div>
                             <div className="text-xs rounded-full h-6 w-6 flex items-center justify-center focus:outline-none">{'❌'}</div>
                             <div className="text-green-500 text-xs rounded-full h-6 w-6 flex items-center justify-center focus:outline-none">&#10003;</div>
                         </div>
                     </div>
 
-                    {exerciseSets[exerciseIndex] && exerciseSets[exerciseIndex].map((set, setIndex) => (
+                    {exercise.sets.map((set, setIndex) => (
                         <div key={setIndex} className="flex flex-row justify-between mt-2">
                             <button className="text-center rounded focus:outline-none bg-gray-200 w-5">
-                                {set.setNum}
+                                {set.set_number}
                             </button>
 
-                            <div className="text-center">--</div>
+                            <div className="text-center">
+                                {(oldExercises[exerciseIndex]?.sets[setIndex] && oldExercises[exerciseIndex]?.sets[setIndex].weight >= 0 && oldExercises[exerciseIndex]?.sets[setIndex].reps >= 0) ? oldExercises[exerciseIndex].sets[setIndex].weight + oldExercises[exerciseIndex].sets[setIndex].weight_unit + ' x ' + oldExercises[exerciseIndex].sets[setIndex].reps : '--'}
+                            </div>
 
                             <div className="flex flex-row space-x-5">
                                 <input
                                     type="text"
                                     id={`weight_${exerciseIndex}_${setIndex}`}
-                                    value={exerciseSets[exerciseIndex][setIndex].weight}
-                                    onChange={(e) => handleWeightChange(exerciseIndex, setIndex, e.target.value)}
+                                    value={set.weight >= 0 ? set.weight : ''}
+                                    onChange={(e) => handleWeightChange(set, exerciseIndex, setIndex, e.target.value)}
                                     className="rounded focus:outline-none bg-gray-200 w-8"
-                                    placeholder=""
+                                    placeholder={oldExercises[exerciseIndex]?.sets[setIndex]?.weight >= 0 ? oldExercises[exerciseIndex].sets[setIndex].weight.toString() : ''}
                                 />
 
                                 <input
                                     type="text"
                                     id={`reps_${exerciseIndex}_${setIndex}`}
-                                    value={exerciseSets[exerciseIndex][setIndex].reps}
-                                    onChange={(e) => handleRepsChange(exerciseIndex, setIndex, e.target.value)}
+                                    value={set.reps >= 0 ? set.reps : ''}
+                                    onChange={(e) => handleRepsChange(set, exerciseIndex, setIndex, e.target.value)}
                                     className="rounded focus:outline-none bg-gray-200 w-8"
-                                    placeholder=""
+                                    placeholder={oldExercises[exerciseIndex]?.sets[setIndex]?.reps >= 0 ? oldExercises[exerciseIndex].sets[setIndex].reps.toString() : ''}
                                 />
 
                                 <button className="text-xs text-black rounded-full h-6 w-6 flex items-center justify-center focus:outline-none">{'❌'}</button>
@@ -177,9 +233,7 @@ const Exercise = ({ addedExercises, setAddedExercises, isConfirmRemoveExerciseOp
                         </div>
                     ))}
 
-
-
-                    <button className='bg-gray-200 px-4 rounded mt-3' onClick={() => addSet(exercise.name, exerciseIndex)}>Add Set</button>
+                    <button className='bg-gray-200 px-4 rounded mt-3' onClick={() => addSet(exerciseIndex)}>Add Set</button>
                 </div>
             ))
             }

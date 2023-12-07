@@ -11,10 +11,8 @@ import ModelExerciseInList from '../Models/ModelExerciseInList';
 
 function WorkoutTracker() {
 
-    const exercisesList = [{ name: "Bench Press", targetMuscle: "Chest", equipiment: "Barbell", weightUnit: "lbs" },
-    { name: "Squat", targetMuscle: "Legs", equipiment: "Barbell", weightUnit: "lbs" },
-    { name: "Deadlift", targetMuscle: "Back", equipiment: "Barbell", weightUnit: "lbs" },
-    { name: "Bent Over Row", targetMuscle: "Back", equipiment: "Barbell", weightUnit: "lbs" }];
+    // Array of exercises the user would like to track identified by exercise id
+    const [addedExerciseIds, setAddedExerciseIds] = useState<number[]>([]);
 
     // This array holds a list of selected exercises by the user
     const [addedExercises, setAddedExercises] = useState<ModelExerciseInList[]>([]);
@@ -30,11 +28,13 @@ function WorkoutTracker() {
 
             <WorkoutHeader />
 
-            <Exercise addedExercises={addedExercises}
+            {addedExerciseIds.length > 0 && <Exercise addedExercises={addedExercises}
                 setAddedExercises={setAddedExercises}
                 isConfirmRemoveExerciseOpen={isConfirmRemoveExerciseOpen}
                 setIsConfirmRemoveExerciseOpen={setIsConfirmRemoveExerciseOpen}
-            />
+                addedExerciseIds={addedExerciseIds}
+                setAddedExerciseIds={setAddedExerciseIds}
+            />}
 
             <GrayedBg isAddExerciseOpen={isAddExerciseOpen}
                 setIsAddExerciseOpen={setIsAddExerciseOpen}
@@ -46,6 +46,8 @@ function WorkoutTracker() {
                 setIsAddExerciseOpen={setIsAddExerciseOpen}
                 addedExercises={addedExercises}
                 setAddedExercises={setAddedExercises}
+                addedExerciseIds={addedExerciseIds}
+                setAddedExerciseIds={setAddedExerciseIds}
             />
 
             <button className='text-blue-500 bg-blue-100 px-4 rounded mt-10' onClick={(() => setIsAddExerciseOpen(true))}>Add Exercise</button>

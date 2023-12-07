@@ -1,38 +1,50 @@
-import React, { useState, useEffect } from 'react';
-import './Styles/ConfirmRemoveExercise.css';
+// import React, { useState, useEffect } from 'react';
+// import './Styles/ConfirmRemoveExercise.css';
+// import ModelExerciseInList from '../Models/ModelExerciseInList';
+// import ModelExercise from '../Models/ModelExercise';
 
-function ConfirmRemoveExercise({ exerciseIndex, isConfirmRemoveExerciseOpen, setIsConfirmRemoveExerciseOpen, addedExercises, setAddedExercises, exerciseSets, setExerciseSets }) {
+// interface Props {
+//     exerciseIndex: number;
+//     isConfirmRemoveExerciseOpen: boolean;
+//     setIsConfirmRemoveExerciseOpen: React.Dispatch<React.SetStateAction<boolean>>;
+//     addedExercises: ModelExerciseInList[];
+//     setAddedExercises: React.Dispatch<React.SetStateAction<ModelExerciseInList[]>>;
+//     addedExerciseIds: number[];
+//     setAddedExerciseIds: React.Dispatch<React.SetStateAction<number[]>>;
+// }
 
-    const exerciseToRemove = addedExercises[exerciseIndex].name;
+// function ConfirmRemoveExercise({ exerciseIndex, isConfirmRemoveExerciseOpen, setIsConfirmRemoveExerciseOpen, addedExercises, setAddedExercises, exerciseSets, setExerciseSets }: Props) {
 
-    const handleRemoveExercise = () => {
-        const updatedAddedExercises = addedExercises.filter((_, index) => index !== exerciseIndex);
-        const updatedExerciseSets = exerciseSets.filter((_, index) => index !== exerciseIndex);
+//     const exerciseToRemove = addedExercises[exerciseIndex].name;
 
-        setAddedExercises(updatedAddedExercises);
-        setExerciseSets(updatedExerciseSets);
-        setIsConfirmRemoveExerciseOpen(false);
-    }
+//     const handleRemoveExercise = () => {
+//         const updatedAddedExercises = addedExercises.filter((_, index) => index !== exerciseIndex);
+//         const updatedExerciseSets = exerciseSets.filter((_, index) => index !== exerciseIndex);
 
-    return (
-        <div className={isConfirmRemoveExerciseOpen ? 'show' : 'hidden'}>
-            <div>
-                Remove Exercise?
-            </div>
+//         setAddedExercises(updatedAddedExercises);
+//         setExerciseSets(updatedExerciseSets);
+//         setIsConfirmRemoveExerciseOpen(false);
+//     }
 
-            <div>
-                This removes "{exerciseToRemove}" and all of your current progress.
-            </div>
+//     return (
+//         <div className={isConfirmRemoveExerciseOpen ? 'show' : 'hidden'}>
+//             <div>
+//                 Remove Exercise?
+//             </div>
 
-            <button onClick={() => setIsConfirmRemoveExerciseOpen(false)}>
-                Cancel
-            </button>
+//             <div>
+//                 This removes "{exerciseToRemove}" and all of your current progress.
+//             </div>
 
-            <button onClick={() => handleRemoveExercise()}>
-                Remove
-            </button>
-        </div>
-    );
-}
+//             <button onClick={() => setIsConfirmRemoveExerciseOpen(false)}>
+//                 Cancel
+//             </button>
 
-export default ConfirmRemoveExercise;
+//             <button onClick={() => handleRemoveExercise()}>
+//                 Remove
+//             </button>
+//         </div>
+//     );
+// }
+
+// export default ConfirmRemoveExercise;

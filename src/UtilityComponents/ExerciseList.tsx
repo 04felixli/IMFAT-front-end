@@ -11,13 +11,17 @@ interface Props {
     setIsAddExerciseOpen: React.Dispatch<React.SetStateAction<boolean>>;
     addedExercises: ModelExerciseInList[];
     setAddedExercises: React.Dispatch<React.SetStateAction<ModelExerciseInList[]>>;
+    addedExerciseIds: number[];
+    setAddedExerciseIds: React.Dispatch<React.SetStateAction<number[]>>;
 }
 
-const ExerciseList = ({ isAddExerciseOpen, setIsAddExerciseOpen, addedExercises, setAddedExercises }: Props) => {
+const ExerciseList = ({ isAddExerciseOpen, setIsAddExerciseOpen, addedExercises, setAddedExercises, addedExerciseIds, setAddedExerciseIds }: Props) => {
 
     // Store the list of exercises
     const [exercises, setExercises] = useState<ModelExerciseInList[] | null>(null) // "exercises" = null when first fetching data, [] when api doesn't find any exercises
-    const [selectedExercises, setSelectedExercises] = useState<ModelExerciseInList[]>([]);
+    const [selectedExerciseIds, setSelectedExerciseIds] = useState<number[]>([]);
+
+    // const [selectedExercises, setSelectedExercises] = useState<ModelExerciseInList[]>([]);
     const [searchInput, setSearchInput] = useState<string>('');
 
     // get list of exercises on user input
@@ -31,7 +35,6 @@ const ExerciseList = ({ isAddExerciseOpen, setIsAddExerciseOpen, addedExercises,
 
     // get initial list of exercises when component first loads
     useEffect(() => {
-        console.log("Fetching initial list of exercises...")
         fetchExercises().then((response) => {
             setExercises(response);
         });
@@ -39,40 +42,60 @@ const ExerciseList = ({ isAddExerciseOpen, setIsAddExerciseOpen, addedExercises,
 
     const handleExerciseSelection = (exercise: ModelExerciseInList): void => {
 
-        const exerciseToFind: ModelExerciseInList | null = isSelected(exercise);
+        isSelected(exercise) ?
+            setSelectedExerciseIds((prev) => prev.filter(id => id !== exercise.id)) : // remove id if already selected 
+            setSelectedExerciseIds((prev) => [...prev, exercise.id]); // add id if not selected 
 
-        // unselect or select the exercise depending on if it is selected already or not
-        exerciseToFind === null ?
-            setSelectedExercises((prev) => [...prev, exercise]) :
-            setSelectedExercises((prev) => prev.filter(item => item !== exerciseToFind));
+        // const exerciseToFind: ModelExerciseInList | null = isSelected(exercise);
+
+        // // unselect or select the exercise depending on if it is selected already or not
+        // exerciseToFind === null ?
+        //     setSelectedExercises((prev) => [...prev, exercise]) :
+        //     setSelectedExercises((prev) => prev.filter(item => item !== exerciseToFind));
     }
 
-    const isSelected = (exercise: ModelExerciseInList): ModelExerciseInList | null => {
-        const exerciseToFind: ModelExerciseInList | undefined = selectedExercises.find(item => item.id === exercise.id);
+    const isSelected = (exercise: ModelExerciseInList): boolean => {
 
-        return exerciseToFind === undefined ? null : exerciseToFind;
+        const { id } = exercise;
+
+        return selectedExerciseIds.includes(id);
+
+        // const exerciseToFind: ModelExerciseInList | undefined = selectedExercises.find(item => item.id === exercise.id);
+
+        // return exerciseToFind === undefined ? null : exerciseToFind;
     }
 
     const handleAddExercise = (): void => {
-        setAddedExercises((prev) => [
-            ...prev,
-            ...selectedExercises.filter(
-                (selectedExercise) => !prev.some((addedExercise) => addedExercise.id === selectedExercise.id)
-            )
-        ]);
 
-        setSelectedExercises([]);
+        setAddedExerciseIds((prev) => [
+            ...prev,
+            ...selectedExerciseIds.filter(
+                (selectedExerciseId) => !prev.some((id) => id === selectedExerciseId)
+            )
+        ])
+
+        setSelectedExerciseIds([]);
         setIsAddExerciseOpen(false);
+
+        // setAddedExercises((prev) => [
+        //     ...prev,
+        //     ...selectedExercises.filter(
+        //         (selectedExercise) => !prev.some((addedExercise) => addedExercise.id === selectedExercise.id)
+        //     )
+        // ]);
+
+        // setSelectedExercises([]);
+        // setIsAddExerciseOpen(false);
     }
 
 
     // useEffect(() => {
-    //     console.log(selectedExercises);
-    // }, [selectedExercises]);
+    //     console.log(selectedExerciseIds);
+    // }, [selectedExerciseIds]);
 
     // useEffect(() => {
-    //     console.log(addedExercises);
-    // }, [addedExercises]);
+    //     console.log(addedExerciseIds);
+    // }, [addedExerciseIds]);
 
     return (
         <div className={`rounded ${isAddExerciseOpen ? 'showAddExerciseList' : 'hidden'}`}>
