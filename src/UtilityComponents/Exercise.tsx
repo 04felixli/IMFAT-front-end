@@ -17,7 +17,7 @@ interface Props {
     setAddedExerciseIds: React.Dispatch<React.SetStateAction<number[]>>;
 }
 
-const Exercise = ({ addedExercises, setAddedExercises, isConfirmRemoveExerciseOpen, setIsConfirmRemoveExerciseOpen, addedExerciseIds, setAddedExerciseIds }: Props) => {
+const Exercise = ({ setIsConfirmRemoveExerciseOpen, addedExerciseIds, setAddedExerciseIds }: Props) => {
 
     // array of exercises with sets 
     const [exercises, setExercises] = useState<ModelExercise[]>([]);
@@ -28,13 +28,23 @@ const Exercise = ({ addedExercises, setAddedExercises, isConfirmRemoveExerciseOp
     // Auto fill exercise info 
     useEffect(() => {
 
-        fetchAutoFillInfo(addedExerciseIds).then((response) => {
-            // console.log(response);
+        let ignore = false;
 
-            setOldExercises(response);
+        if (addedExerciseIds.length !== exercises.length) {
+            const newlyAddedExerciseIds: number[] = addedExerciseIds.slice(exercises.length);
 
-            setExercises(response);
-        });
+            fetchAutoFillInfo(newlyAddedExerciseIds).then((response) => {
+                if (!ignore) {
+                    setOldExercises(prev => [...prev, ...response]);
+
+                    setExercises(prev => [...prev, ...response]);
+                }
+            });
+        }
+
+        return () => {
+            ignore = true;
+        };
 
     }, [addedExerciseIds]);
 
@@ -44,9 +54,13 @@ const Exercise = ({ addedExercises, setAddedExercises, isConfirmRemoveExerciseOp
 
     // 2 - 1 = 1
 
-    useEffect(() => {
-        console.log("exercises are: ", exercises)
-    }, [exercises]);
+    // useEffect(() => {
+    //     console.log("Component re-rendered")
+    // }, []);
+
+    // useEffect(() => {
+    //     console.log(addedExerciseIds)
+    // }, [addedExerciseIds]);
 
     // // An array of arrays holding objects for each exercise and its sets. Each set object has a set number, weight, and reps. 
     // const [exerciseSets, setExerciseSets] = useState([]);
@@ -153,7 +167,7 @@ const Exercise = ({ addedExercises, setAddedExercises, isConfirmRemoveExerciseOp
 
                     <div className="flex flex-row justify-between text-blue-500">
                         <button>
-                            {exercise.name}
+                            {exercise.name + ' (' + exercise.equipment + ') '}
                         </button>
 
                         <div className="flex flex-row space-x-5">
