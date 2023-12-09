@@ -27,15 +27,25 @@ const Exercise = ({ addedExercises, setAddedExercises, isConfirmRemoveExerciseOp
 
     // Auto fill exercise info 
     useEffect(() => {
-        console.log("Auto filling exercises...")
+
         fetchAutoFillInfo(addedExerciseIds).then((response) => {
+            // console.log(response);
+
             setOldExercises(response);
+
             setExercises(response);
         });
+
     }, [addedExerciseIds]);
 
+    // exerciseIds[] = [1] length = 1
+
+    // exercises[] = [0] length = 0
+
+    // 2 - 1 = 1
+
     useEffect(() => {
-        console.log(exercises)
+        console.log("exercises are: ", exercises)
     }, [exercises]);
 
     // // An array of arrays holding objects for each exercise and its sets. Each set object has a set number, weight, and reps. 
