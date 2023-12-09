@@ -23,9 +23,9 @@ const StartWorkout = () => {
                 <WorkoutTracker />
             </section>
 
-            <div className="templates-row">
+            <div className="flex flex-row justify-start mt-10 font-bold">
                 <div className="text-lg">Templates</div>
-                <button className="add-templates-button">+Template</button>
+                <button className="text-lg text-blue-500 bg-blue-100 rounded-full h-6 w-6 flex items-center justify-center focus:outline-none">+</button>
             </div>
 
         </div>
@@ -34,7 +34,7 @@ const StartWorkout = () => {
 }
 
 // This function returns the time of the workout
-const getTimeOfDay = ():string => {
+const getTimeOfDay = (): string => {
     const now = new Date();
     const currentHour = now.getHours();
 

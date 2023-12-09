@@ -21,15 +21,15 @@
 }
 
 .start-workout-button {
-    @apply bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-10 w-9/12 mx-auto;
+    @apply bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-10 w-10/12 mx-auto;
 }
 
-.add-templates-button {
+/* .add-templates-button {
     @apply text-lg text-blue-500 bg-blue-100 px-4 rounded;
-}
+} */
 
 .templates-row {
-    @apply flex flex-row justify-around mt-10 font-bold
+    /* @apply flex flex-row justify-around mt-10 font-bold */
 }
 
 .hide-tracker {
