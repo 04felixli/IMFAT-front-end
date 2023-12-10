@@ -221,12 +221,15 @@ const Exercise = ({ setIsConfirmRemoveExerciseOpen, addedExerciseIds, setAddedEx
                     </div>
 
                     <div>
-                        <input
-                            type="text"
+                        <textarea
                             id={`notes_${exerciseIndex}`}
                             value={exercise.notes ? exercise.notes : ''}
-                            onChange={(e) => handleNotesChange(exerciseIndex, e.target.value)}
-                            className="rounded focus:outline-none bg-transparent border-b border-gray-300 w-full mt-2"
+                            onChange={(e) => {
+                                handleNotesChange(exerciseIndex, e.target.value);
+                                e.target.style.height = 'auto'; // Reset height to auto
+                                e.target.style.height = `${e.target.scrollHeight}px`; // Set height to scrollHeight
+                            }}
+                            className="rounded focus:outline-none bg-transparent border-b border-gray-300 w-full mt-2 resize-none overflow-hidden min-h-8 h-auto"
                             placeholder={exercise.notes ? exercise.notes : 'Add Notes'}
                         />
                     </div>
