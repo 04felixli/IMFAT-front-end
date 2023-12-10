@@ -13,8 +13,8 @@ class ModelWorkout {
         this.date = date;
         this.name = name;
         this.duration = duration;
-        this.exercises = exercises
+        this.exercises = exercises;
     }
 }
 
-export default ModelExercise; 
+export default ModelWorkout; 

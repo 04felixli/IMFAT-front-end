@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { add, format } from "date-fns";
 import GrayedBg from './GrayedBg';
 import { fetchExercises } from '../MainComponents/lib';
-import ModelExerciseInList from '../Models/ModelExerciseInList';
+import ModelExerciseInList from '../Interfaces/ResponseModels/IResponseModelExerciseInList';
 
 interface Props {
     isAddExerciseOpen: boolean;

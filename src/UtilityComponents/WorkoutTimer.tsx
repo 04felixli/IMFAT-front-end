@@ -3,25 +3,29 @@ import './Styles/WorkoutTracker.css';
 import { useState, useEffect } from 'react';
 import { format } from "date-fns";
 
+interface Props {
+    duration: number;
+    setDuration: React.Dispatch<React.SetStateAction<number>>;
+}
 
-function WorkoutTimer() {
+const WorkoutTimer = ({ duration, setDuration }: Props) => {
 
     // Handle workout timer
     const startTime: number = Date.now();
-    const [elapsedTime, setElapsedTime] = useState<number>(0);
+    // const [duration, setDuration] = useState<number>(0);
 
     useEffect(() => {
 
         const interval: NodeJS.Timeout = setInterval(() => {
             const currentTime: number = Date.now();
-            setElapsedTime(Math.floor((currentTime - startTime) / 1000));
+            setDuration(Math.floor((currentTime - startTime) / 1000));
         }, 1000);
 
         return () => clearInterval(interval);
     }, []);
 
     return (
-        <p>{formatTime(elapsedTime)}</p>
+        <p>{formatTime(duration)}</p>
     )
 }
 

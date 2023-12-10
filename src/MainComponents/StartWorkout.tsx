@@ -19,9 +19,9 @@ const StartWorkout = () => {
 
             <button className={"start-workout-button default-border " + (isStarted ? "hide-tracker" : '')} onClick={() => setIsStarted((prev) => !prev)}> Start New Workout </button>
 
-            <section className={isStarted ? '' : "hide-tracker"}>
+            {isStarted && <section>
                 <WorkoutTracker />
-            </section>
+            </section>}
 
             <div className="flex flex-row justify-start mt-10 font-bold">
                 <div className="text-lg">Templates</div>

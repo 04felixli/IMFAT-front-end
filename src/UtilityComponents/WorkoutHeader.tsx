@@ -1,14 +1,22 @@
 // This component renders the user input for workout name and the time elapsed since workout started
+
 import React from 'react';
 import './Styles/WorkoutTracker.css';
 import { useState, useEffect } from 'react';
-import { format } from "date-fns";
+import { format, set } from "date-fns";
 import WorkoutTimer from './WorkoutTimer';
 
-const WorkoutHeader = () => {
+interface Props {
+    duration: number;
+    setDuration: React.Dispatch<React.SetStateAction<number>>;
+    workoutName: string;
+    setWorkoutName: React.Dispatch<React.SetStateAction<string>>;
+}
+
+const WorkoutHeader = ({ duration, setDuration, workoutName, setWorkoutName }: Props) => {
 
     // Handle workout title 
-    const [inputWorkoutName, setWorkoutName] = useState<string>('');
+    // const [workoutName, setWorkoutName] = useState<string>('');
 
     const handleWorkoutName = (e: React.ChangeEvent<HTMLInputElement>): void => {
         setWorkoutName(e.target.value);
@@ -18,13 +26,13 @@ const WorkoutHeader = () => {
         <div>
             <section className='flex flex-row justify-between'>
                 <label htmlFor="WorkoutName">Workout Name:</label>
-                <WorkoutTimer />
+                <WorkoutTimer duration={duration} setDuration={setDuration} />
             </section>
 
             <input
                 type="text"
                 id="WorkoutName"
-                value={inputWorkoutName}
+                value={workoutName}
                 onChange={handleWorkoutName}
                 className="w-full rounded focus:outline-none bg-gray-200 p-2"
                 placeholder={getDate()}
