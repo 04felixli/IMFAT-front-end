@@ -2,7 +2,7 @@
 import React from "react";
 import { add } from "date-fns";
 import { useState, useEffect, useRef } from "react";
-// import ConfirmRemoveExercise from "./ConfirmRemoveExercise";
+import ConfirmRemoveExercise from "./ConfirmRemoveExercise";
 import ModelExerciseInList from "../Interfaces/ResponseModels/IResponseModelExerciseInList";
 import ModelExercise from "../Models/ModelExercise";
 import { fetchAutoFillInfo } from "../MainComponents/lib";
@@ -13,17 +13,23 @@ interface Props {
     setExercises: React.Dispatch<React.SetStateAction<ModelExercise[]>>;
     oldExercises: ModelExercise[];
     setOldExercises: React.Dispatch<React.SetStateAction<ModelExercise[]>>;
+    isConfirmRemoveExerciseOpen: boolean;
     setIsConfirmRemoveExerciseOpen: React.Dispatch<React.SetStateAction<boolean>>;
     addedExerciseIds: number[];
+    setAddedExerciseIds: React.Dispatch<React.SetStateAction<number[]>>;
+    exerciseIndexToRemove: number;
+    setExerciseIndexToRemove: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const Exercise = ({ exercises, setExercises, oldExercises, setOldExercises, setIsConfirmRemoveExerciseOpen, addedExerciseIds }: Props) => {
+const Exercise = ({ exercises, setExercises, oldExercises, setOldExercises, isConfirmRemoveExerciseOpen, setIsConfirmRemoveExerciseOpen, addedExerciseIds, setAddedExerciseIds, exerciseIndexToRemove, setExerciseIndexToRemove }: Props) => {
 
     // array of exercises with sets 
     // const [exercises, setExercises] = useState<ModelExercise[]>([]);
 
     // Copy of above to hold previous values 
     // const [oldExercises, setOldExercises] = useState<ModelExercise[]>([]);
+
+    // const [removeExercise, setRemoveExercise] = useState<boolean>(false);
 
     // Auto fill exercise info 
     useEffect(() => {
@@ -51,7 +57,10 @@ const Exercise = ({ exercises, setExercises, oldExercises, setOldExercises, setI
     const addSet = (exerciseIndex: number) => {
         setExercises(prevExercises => {
 
-            const exercisesCopy: ModelExercise[] = prevExercises.map(exercise => ({ ...exercise }));
+            const exercisesCopy: ModelExercise[] = prevExercises.map(exercise => ({
+                ...exercise,
+                sets: exercise.sets.map(set => ({ ...set }))
+            }));
 
             const weight_unit: string = exercisesCopy[exerciseIndex].sets[0].weight_unit;
             const set_number: number = exercisesCopy[exerciseIndex].sets.length + 1;
@@ -109,13 +118,10 @@ const Exercise = ({ exercises, setExercises, oldExercises, setOldExercises, setI
         // setAddedExercises(updatedAddedExercises);
     }
 
-    // const handleRemoveExercise = (exerciseIndex) => {
-    //     const updatedAddedExercises = addedExercises.filter((_, index) => index !== exerciseIndex);
-    //     const updatedExerciseSets = exerciseSets.filter((_, index) => index !== exerciseIndex);
-
-    //     setAddedExercises(updatedAddedExercises);
-    //     setExerciseSets(updatedExerciseSets);
-    // }
+    const handleRemoveExercise = (exerciseIndex: number) => {
+        setExerciseIndexToRemove(exerciseIndex);
+        setIsConfirmRemoveExerciseOpen(true);
+    }
 
     // useEffect(() => {
     //     console.log("Exercise Sets ", exerciseSets);
@@ -157,9 +163,10 @@ const Exercise = ({ exercises, setExercises, oldExercises, setOldExercises, setI
     //     console.log("Component re-rendered")
     // }, []);
 
-    useEffect(() => {
-        console.log(exercises)
-    }, [exercises]);
+    // useEffect(() => {
+    //     console.log("exercises are: ", exercises);
+    //     console.log("exercise Ids are: ", addedExerciseIds);
+    // }, [exercises, addedExerciseIds]);
 
     return (
         <div className={exercises ? 'flex flex-col mt-5' : 'hidden'}>
@@ -189,23 +196,26 @@ const Exercise = ({ exercises, setExercises, oldExercises, setOldExercises, setI
                             <button className="text-xs bg-red-100 rounded-full h-6 w-6 flex items-center justify-center focus:outline-none"
                                 onClick={() => setIsConfirmRemoveExerciseOpen(true)}
                             >
-                                {/* <img
+                                <img
                                     src='/RemoveExerciseIcon.svg'
                                     alt="Remove Exercise Icon"
                                     className="h-4 w-4"
                                     onClick={() => handleRemoveExercise(exerciseIndex)}
-                                /> */}
-                                {'❌'}
+                                />
+                                {/* {'❌'} */}
                             </button>
 
-                            {/* <ConfirmRemoveExercise exerciseIndex={exerciseIndex}
+                            {isConfirmRemoveExerciseOpen && <ConfirmRemoveExercise exerciseIndexToRemove={exerciseIndexToRemove}
+                                setExerciseIndexToRemove={setExerciseIndexToRemove}
                                 isConfirmRemoveExerciseOpen={isConfirmRemoveExerciseOpen}
                                 setIsConfirmRemoveExerciseOpen={setIsConfirmRemoveExerciseOpen}
-                                addedExercises={addedExercises}
-                                setAddedExercises={setAddedExercises}
-                                // exerciseSets={exerciseSets}
-                                // setExerciseSets={setExerciseSets}
-                            /> */}
+                                addedExerciseIds={addedExerciseIds}
+                                setAddedExerciseIds={setAddedExerciseIds}
+                                exercises={exercises}
+                                setExercises={setExercises}
+                                oldExercises={oldExercises}
+                                setOldExercises={setOldExercises}
+                            />}
 
                         </div>
                     </div>

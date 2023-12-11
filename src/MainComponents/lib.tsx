@@ -57,7 +57,7 @@ export const fetchAutoFillInfo = async (addedExerciseIds: number[]): Promise<Mod
             };
         });
 
-        console.log("Modified info is: ", modifiedInfo);
+        // console.log("Modified info is: ", modifiedInfo);
 
         return modifiedInfo;
 

@@ -1,50 +1,77 @@
-// import React, { useState, useEffect } from 'react';
-// import './Styles/ConfirmRemoveExercise.css';
+import React, { useState, useEffect } from 'react';
+import './Styles/ConfirmRemoveExercise.css';
 // import ModelExerciseInList from '../Models/ModelExerciseInList';
-// import ModelExercise from '../Models/ModelExercise';
+import ModelExercise from '../Models/ModelExercise';
 
-// interface Props {
-//     exerciseIndex: number;
-//     isConfirmRemoveExerciseOpen: boolean;
-//     setIsConfirmRemoveExerciseOpen: React.Dispatch<React.SetStateAction<boolean>>;
-//     addedExercises: ModelExerciseInList[];
-//     setAddedExercises: React.Dispatch<React.SetStateAction<ModelExerciseInList[]>>;
-//     addedExerciseIds: number[];
-//     setAddedExerciseIds: React.Dispatch<React.SetStateAction<number[]>>;
-// }
+interface Props {
+    isConfirmRemoveExerciseOpen: boolean;
+    setIsConfirmRemoveExerciseOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    addedExerciseIds: number[]
+    setAddedExerciseIds: React.Dispatch<React.SetStateAction<number[]>>;
+    exercises: ModelExercise[];
+    setExercises: React.Dispatch<React.SetStateAction<ModelExercise[]>>;
+    oldExercises: ModelExercise[];
+    setOldExercises: React.Dispatch<React.SetStateAction<ModelExercise[]>>;
+    exerciseIndexToRemove: number;
+    setExerciseIndexToRemove: React.Dispatch<React.SetStateAction<number>>;
+}
 
-// function ConfirmRemoveExercise({ exerciseIndex, isConfirmRemoveExerciseOpen, setIsConfirmRemoveExerciseOpen, addedExercises, setAddedExercises, exerciseSets, setExerciseSets }: Props) {
+const ConfirmRemoveExercise = ({ isConfirmRemoveExerciseOpen, setIsConfirmRemoveExerciseOpen, addedExerciseIds, setAddedExerciseIds, exercises, setExercises, oldExercises, setOldExercises, exerciseIndexToRemove, setExerciseIndexToRemove }: Props) => {
 
-//     const exerciseToRemove = addedExercises[exerciseIndex].name;
+    const exerciseToRemove = exercises[exerciseIndexToRemove].name;
 
-//     const handleRemoveExercise = () => {
-//         const updatedAddedExercises = addedExercises.filter((_, index) => index !== exerciseIndex);
-//         const updatedExerciseSets = exerciseSets.filter((_, index) => index !== exerciseIndex);
+    const handleRemoveExercise = () => {
+        setAddedExerciseIds(prev => prev.filter((id, index) => index !== exerciseIndexToRemove)) // remove the id at exerciseIndex from addedExerciseIds array 
 
-//         setAddedExercises(updatedAddedExercises);
-//         setExerciseSets(updatedExerciseSets);
-//         setIsConfirmRemoveExerciseOpen(false);
-//     }
+        setExercises(prevExercises => {
+            const exercisesCopy: ModelExercise[] = prevExercises.map(exercise => ({
+                ...exercise,
+                sets: exercise.sets.map(set => ({ ...set })),
+            }));
 
-//     return (
-//         <div className={isConfirmRemoveExerciseOpen ? 'show' : 'hidden'}>
-//             <div>
-//                 Remove Exercise?
-//             </div>
+            const filteredExercisesCopy = exercisesCopy.filter((exercise, index) => index !== exerciseIndexToRemove); // // remove the exercise object at exerciseIndex from exercises array 
 
-//             <div>
-//                 This removes "{exerciseToRemove}" and all of your current progress.
-//             </div>
+            return filteredExercisesCopy;
+        });
 
-//             <button onClick={() => setIsConfirmRemoveExerciseOpen(false)}>
-//                 Cancel
-//             </button>
+        setOldExercises(prevExercises => {
+            const exercisesCopy: ModelExercise[] = prevExercises.map(exercise => ({
+                ...exercise,
+                sets: exercise.sets.map(set => ({ ...set })),
+            }));
 
-//             <button onClick={() => handleRemoveExercise()}>
-//                 Remove
-//             </button>
-//         </div>
-//     );
-// }
+            const filteredExercisesCopy = exercisesCopy.filter((exercise, index) => index !== exerciseIndexToRemove); // // remove the exercise object at exerciseIndex from exercises array 
 
-// export default ConfirmRemoveExercise;
+            return filteredExercisesCopy;
+        });
+
+        setIsConfirmRemoveExerciseOpen(false);
+        setExerciseIndexToRemove(-1);
+    }
+
+    useEffect(() => {
+        console.log("Page re-rendered")
+    }, [])
+
+    return (
+        <div className={'show'}>
+            <div>
+                Remove Exercise?
+            </div>
+
+            <div>
+                This removes "{exerciseToRemove}" and all of your current progress.
+            </div>
+
+            <button onClick={() => setIsConfirmRemoveExerciseOpen(false)}>
+                Cancel
+            </button>
+
+            <button onClick={() => handleRemoveExercise()}>
+                Remove
+            </button>
+        </div>
+    );
+}
+
+export default ConfirmRemoveExercise;

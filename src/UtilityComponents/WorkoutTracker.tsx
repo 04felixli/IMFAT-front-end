@@ -12,7 +12,7 @@ import ModelExercise from '../Models/ModelExercise';
 import ModelWorkout from '../Models/ModelWorkout';
 import { postWorkout } from '../MainComponents/lib';
 
-function WorkoutTracker() {
+const WorkoutTracker = () => {
 
     // Array of exercises the user would like to track identified by exercise id
     const [addedExerciseIds, setAddedExerciseIds] = useState<number[]>([]);
@@ -74,7 +74,12 @@ function WorkoutTracker() {
         }
     };
 
+    const [exerciseIndexToRemove, setExerciseIndexToRemove] = useState<number>(-1);
 
+    useEffect(() => {
+        console.log("exercises are: ", exercises);
+        console.log("exercise Ids are: ", addedExerciseIds);
+    }, [exercises, addedExerciseIds]);
 
     return (
         <div className="workout-tracker" >
@@ -85,8 +90,12 @@ function WorkoutTracker() {
                 setExercises={setExercises}
                 oldExercises={oldExercises}
                 setOldExercises={setOldExercises}
+                isConfirmRemoveExerciseOpen={isConfirmRemoveExerciseOpen}
                 setIsConfirmRemoveExerciseOpen={setIsConfirmRemoveExerciseOpen}
                 addedExerciseIds={addedExerciseIds}
+                setAddedExerciseIds={setAddedExerciseIds}
+                exerciseIndexToRemove={exerciseIndexToRemove}
+                setExerciseIndexToRemove={setExerciseIndexToRemove}
             />}
 
             <GrayedBg isAddExerciseOpen={isAddExerciseOpen}
