@@ -3,7 +3,7 @@
 import ResponseModelPastSet from "./IResponseModelPastSet";
 
 interface IResponseModelPastExercise {
-    exercise_id: number;
+    id: number;
     name: string;
     equipment: string;
     notes: string | null;

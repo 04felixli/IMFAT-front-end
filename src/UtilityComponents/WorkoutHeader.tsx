@@ -11,9 +11,10 @@ interface Props {
     setDuration: React.Dispatch<React.SetStateAction<number>>;
     workoutName: string;
     setWorkoutName: React.Dispatch<React.SetStateAction<string>>;
+    date: string
 }
 
-const WorkoutHeader = ({ duration, setDuration, workoutName, setWorkoutName }: Props) => {
+const WorkoutHeader = ({ duration, setDuration, workoutName, setWorkoutName, date }: Props) => {
 
     // Handle workout title 
     // const [workoutName, setWorkoutName] = useState<string>('');
@@ -35,19 +36,10 @@ const WorkoutHeader = ({ duration, setDuration, workoutName, setWorkoutName }: P
                 value={workoutName}
                 onChange={handleWorkoutName}
                 className="w-full rounded focus:outline-none bg-gray-200 p-2"
-                placeholder={getDate()}
+                placeholder={"New Workout"}
             />
         </div>
     )
-}
-
-// This function returns the time of the workout
-const getDate = (): string => {
-    const now = new Date();
-    const formattedDate: string = format(now, "yyyy-MM-dd");
-
-    return formattedDate;
-
 }
 
 export default WorkoutHeader; 

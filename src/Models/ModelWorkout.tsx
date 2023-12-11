@@ -11,7 +11,7 @@ class ModelWorkout {
     constructor(type: string, date: string, name: string, duration: number, exercises: ModelExercise[]) {
         this.type = type;
         this.date = date;
-        this.name = name;
+        this.name = name !== '' ? name : 'New Workout';
         this.duration = duration;
         this.exercises = exercises;
     }

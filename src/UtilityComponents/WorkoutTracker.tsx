@@ -10,6 +10,7 @@ import Exercise from './Exercise';
 import ModelExerciseInList from '../Interfaces/ResponseModels/IResponseModelExerciseInList';
 import ModelExercise from '../Models/ModelExercise';
 import ModelWorkout from '../Models/ModelWorkout';
+import { postWorkout } from '../MainComponents/lib';
 
 function WorkoutTracker() {
 
@@ -37,13 +38,12 @@ function WorkoutTracker() {
         return new Date(date).toLocaleString('en-US', options).replace(',', ''); // Remove comma from the formatted date
     };
 
-    const date: Date = new Date();
 
-    const formattedDate: string = formatDate(date); // Date and time of workout 
+    const [date, setDate] = useState<string>((new Date()).toISOString()) // Date and time of workout 
 
     const [duration, setDuration] = useState<number>(0) // duration of workout in seconds 
 
-    const [workoutName, setWorkoutName] = useState<string>(formattedDate); // Name of the workout - default is the date of the workout
+    const [workoutName, setWorkoutName] = useState<string>(''); // Name of the workout - default is the date of the workout
 
     const workoutType: string = "Weight Lifting";
 
@@ -54,15 +54,32 @@ function WorkoutTracker() {
     const [oldExercises, setOldExercises] = useState<ModelExercise[]>([]);
 
     const handleFinishWorkout = () => {
-        const workout = new ModelWorkout(workoutType, formattedDate, workoutName, duration, exercises);
+        if (exercises.length !== 0) {
+            // Filter exercises to keep only completed sets
+            const filteredExercises = exercises
+                .map(exercise => ({
+                    ...exercise,
+                    sets: exercise.sets.filter(set => set.isCompleted === true),
+                }))
+                .filter(exercise => exercise.sets.length > 0); // Filter out exercises with no completed sets
 
-        console.log(workout)
-    }
+            // Create workout based on filtered exercises
+            const workout = new ModelWorkout(workoutType, date, workoutName, duration, filteredExercises);
+
+            postWorkout(workout);
+            console.log("workout is", workout);
+
+            // Clear exercises state
+            setExercises([]);
+        }
+    };
+
+
 
     return (
         <div className="workout-tracker" >
 
-            <WorkoutHeader duration={duration} setDuration={setDuration} workoutName={workoutName} setWorkoutName={setWorkoutName} />
+            <WorkoutHeader duration={duration} setDuration={setDuration} workoutName={workoutName} setWorkoutName={setWorkoutName} date={date} />
 
             {addedExerciseIds.length > 0 && <Exercise exercises={exercises}
                 setExercises={setExercises}
