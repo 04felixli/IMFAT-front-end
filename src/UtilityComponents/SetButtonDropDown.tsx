@@ -18,7 +18,7 @@ const SetButtonDropDown = ({ set_number, isCompleted, setExercises, exerciseInde
         setIsOpen(!isOpen);
     };
 
-    const handleSetDeletion = () => {
+    const handleSetDeletion = (): void => {
         setExercises(prevExercises => {
 
             const exercisesCopy: ModelExercise[] = prevExercises.map(exercise => ({

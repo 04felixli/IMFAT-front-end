@@ -8,7 +8,7 @@ interface Props {
 
 const GrayBg = ({ onClick }: Props) => {
 
-    const handleClick = () => {
+    const handleClick = (): void => {
         onClick();
     }
 

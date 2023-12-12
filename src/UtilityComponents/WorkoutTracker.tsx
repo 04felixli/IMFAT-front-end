@@ -11,8 +11,14 @@ import ModelExerciseInList from '../Interfaces/ResponseModels/IResponseModelExer
 import ModelExercise from '../Models/ModelExercise';
 import ModelWorkout from '../Models/ModelWorkout';
 import { postWorkout } from '../MainComponents/lib';
+import ConfirmWorkoutCompletion from './ConfirmWorkoutCompletion';
 
-const WorkoutTracker = () => {
+interface Props {
+    isStarted: boolean;
+    setIsStarted: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const WorkoutTracker = ({ isStarted, setIsStarted }: Props) => {
 
     // Array of exercises the user would like to track identified by exercise id
     const [addedExerciseIds, setAddedExerciseIds] = useState<number[]>([]);
@@ -40,33 +46,18 @@ const WorkoutTracker = () => {
     // Copy of above to hold previous values 
     const [oldExercises, setOldExercises] = useState<ModelExercise[]>([]);
 
-    const handleFinishWorkout = () => {
-        if (exercises.length !== 0) {
-            // Filter exercises to keep only completed sets
-            const filteredExercises = exercises
-                .map(exercise => ({
-                    ...exercise,
-                    sets: exercise.sets.filter(set => set.isCompleted === true),
-                }))
-                .filter(exercise => exercise.sets.length > 0); // Filter out exercises with no completed sets
+    const [isWorkoutFinished, setIsWorkoutFinished] = useState<boolean>(false);
 
-            // Create workout based on filtered exercises
-            const workout = new ModelWorkout(workoutType, date, workoutName, duration, filteredExercises);
-
-            postWorkout(workout);
-            console.log("workout is", workout);
-
-            // Clear exercises state
-            setExercises([]);
-        }
+    const handleFinishWorkout = (): void => {
+        setIsWorkoutFinished(true);
     };
 
     const [exerciseIndexToRemove, setExerciseIndexToRemove] = useState<number>(-1); // index of exercise to remove OR index of exercise to remove a set from
 
-    useEffect(() => {
-        console.log("exercises are: ", exercises);
-        console.log("exercise Ids are: ", addedExerciseIds);
-    }, [exercises, addedExerciseIds]);
+    // useEffect(() => {
+    //     console.log("exercises are: ", exercises);
+    //     console.log("exercise Ids are: ", addedExerciseIds);
+    // }, [exercises, addedExerciseIds]);
 
     return (
         <div className="workout-tracker" >
@@ -98,6 +89,16 @@ const WorkoutTracker = () => {
                 addedExerciseIds={addedExerciseIds}
                 setAddedExerciseIds={setAddedExerciseIds}
             />
+
+            {isWorkoutFinished && <ConfirmWorkoutCompletion exercises={exercises}
+                workoutName={workoutName}
+                workoutType={workoutType}
+                setExercises={setExercises}
+                date={date}
+                duration={duration}
+                setIsWorkoutFinished={setIsWorkoutFinished}
+                setIsStarted={setIsStarted}
+            />}
 
             <button className='text-blue-500 bg-blue-100 px-4 rounded mt-10' onClick={() => setIsAddExerciseOpen(true)}>Add Exercise</button>
             <button className='text-green-500 bg-green-100 px-4 rounded mt-10' onClick={() => handleFinishWorkout()}>Finish Workout</button>
