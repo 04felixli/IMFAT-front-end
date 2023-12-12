@@ -61,7 +61,7 @@ const WorkoutTracker = () => {
         }
     };
 
-    const [exerciseIndexToRemove, setExerciseIndexToRemove] = useState<number>(-1);
+    const [exerciseIndexToRemove, setExerciseIndexToRemove] = useState<number>(-1); // index of exercise to remove OR index of exercise to remove a set from
 
     useEffect(() => {
         console.log("exercises are: ", exercises);

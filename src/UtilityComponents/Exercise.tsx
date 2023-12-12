@@ -64,7 +64,9 @@ const Exercise = ({ exercises, setExercises, oldExercises, setOldExercises, isCo
                 sets: exercise.sets.map(set => ({ ...set }))
             }));
 
-            const weight_unit: string = exercisesCopy[exerciseIndex].sets[0].weight_unit;
+            // const weight_unit: string = exercisesCopy[exerciseIndex].sets[0].weight_unit;
+
+            const weight_unit: string = exercisesCopy[exerciseIndex].sets.length > 0 ? exercisesCopy[exerciseIndex].sets[0].weight_unit : oldExercises[exerciseIndex].sets[0].weight_unit
             const set_number: number = exercisesCopy[exerciseIndex].sets.length + 1;
 
             const set: ModelSet = {
@@ -184,7 +186,7 @@ const Exercise = ({ exercises, setExercises, oldExercises, setOldExercises, isCo
                             <button className="text-sm text-blue-500 bg-blue-100 rounded-full h-6 w-6 flex items-center justify-center focus:outline-none"
                                 onClick={() => handleWeightUnitChange(exercise, exerciseIndex)}
                             >
-                                {exercise.sets[0].weight_unit}
+                                {exercise.sets.length > 0 ? exercise.sets[0].weight_unit : oldExercises[exerciseIndex].sets[0].weight_unit}
                             </button>
 
                             <button className="text-sm bg-blue-100 rounded-full h-6 w-6 flex items-center justify-center focus:outline-none">
@@ -241,7 +243,7 @@ const Exercise = ({ exercises, setExercises, oldExercises, setOldExercises, isCo
                         <div>Previous</div>
 
                         <div className="flex flex-row space-x-5">
-                            <div>{exercise.sets[0].weight_unit}</div>
+                            <div>{exercise.sets.length > 0 ? exercise.sets[0].weight_unit : oldExercises[exerciseIndex].sets[0].weight_unit}</div>
                             <div>Reps</div>
                             <div className="text-green-500 text-xs rounded-full h-6 w-6 flex items-center justify-center focus:outline-none">&#10003;</div>
                         </div>
@@ -250,7 +252,7 @@ const Exercise = ({ exercises, setExercises, oldExercises, setOldExercises, isCo
                     {exercise.sets.map((set, setIndex) => (
                         <div key={setIndex} className={`flex flex-row justify-between mt-2 ${exercise.sets[setIndex].isCompleted ? 'bg-green-100' : ''}`}>
 
-                            <SetButtonDropDown set_number={set.set_number} isCompleted={exercise.sets[setIndex].isCompleted} />
+                            <SetButtonDropDown set_number={set.set_number} exerciseIndex={exerciseIndex} isCompleted={exercise.sets[setIndex].isCompleted} setExercises={setExercises} />
 
                             <div className="text-center">
                                 {(oldExercises[exerciseIndex]?.sets[setIndex] && oldExercises[exerciseIndex]?.sets[setIndex].weight >= 0 && oldExercises[exerciseIndex]?.sets[setIndex].reps >= 0) ? oldExercises[exerciseIndex].sets[setIndex].weight + oldExercises[exerciseIndex].sets[setIndex].weight_unit + ' x ' + oldExercises[exerciseIndex].sets[setIndex].reps : '--'}
