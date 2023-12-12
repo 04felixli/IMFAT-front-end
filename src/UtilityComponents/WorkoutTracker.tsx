@@ -26,19 +26,6 @@ const WorkoutTracker = () => {
     // A pop-up window to ask the user if they are sure before removing an exercise
     const [isConfirmRemoveExerciseOpen, setIsConfirmRemoveExerciseOpen] = useState<boolean>(false);
 
-    const formatDate = (date: Date): string => {
-        const options: Intl.DateTimeFormatOptions = {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-        };
-
-        return new Date(date).toLocaleString('en-US', options).replace(',', ''); // Remove comma from the formatted date
-    };
-
-
     const [date, setDate] = useState<string>((new Date()).toISOString()) // Date and time of workout 
 
     const [duration, setDuration] = useState<number>(0) // duration of workout in seconds 

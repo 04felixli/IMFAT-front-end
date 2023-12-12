@@ -7,6 +7,8 @@ import ModelExerciseInList from "../Interfaces/ResponseModels/IResponseModelExer
 import ModelExercise from "../Models/ModelExercise";
 import { fetchAutoFillInfo } from "../MainComponents/lib";
 import ModelSet from "../Models/ModelSet";
+import SetButtonDropDown from "./SetButtonDropDown";
+
 
 interface Props {
     exercises: ModelExercise[];
@@ -54,7 +56,7 @@ const Exercise = ({ exercises, setExercises, oldExercises, setOldExercises, isCo
 
     }, [addedExerciseIds]);
 
-    const addSet = (exerciseIndex: number) => {
+    const addSet = (exerciseIndex: number): void => {
         setExercises(prevExercises => {
 
             const exercisesCopy: ModelExercise[] = prevExercises.map(exercise => ({
@@ -79,7 +81,7 @@ const Exercise = ({ exercises, setExercises, oldExercises, setOldExercises, isCo
         });
     };
 
-    const handleWeightChange = (set: ModelSet, exerciseIndex: number, setIndex: number, value: string) => {
+    const handleWeightChange = (set: ModelSet, exerciseIndex: number, setIndex: number, value: string): void => {
         setExercises(prevExercises => {
 
             const exercisesCopy: ModelExercise[] = prevExercises.map(exercise => ({
@@ -94,7 +96,7 @@ const Exercise = ({ exercises, setExercises, oldExercises, setOldExercises, isCo
 
     };
 
-    const handleRepsChange = (exerciseIndex: number, setIndex: number, value: string) => {
+    const handleRepsChange = (exerciseIndex: number, setIndex: number, value: string): void => {
 
         setExercises(prevExercises => {
 
@@ -109,16 +111,12 @@ const Exercise = ({ exercises, setExercises, oldExercises, setOldExercises, isCo
         });
     };
 
-    const handleWeightUnitChange = (exercise: ModelExercise, exerciseIndex: number) => {
+    const handleWeightUnitChange = (exercise: ModelExercise, exerciseIndex: number): void => {
 
         exercise.sets[0].weight_unit = (exercise.sets[0].weight_unit === 'lbs' ? 'kg' : 'lbs');
-
-        // const updatedAddedExercises = [...addedExercises];
-        // updatedAddedExercises[exerciseIndex].weightUnit === 'lbs' ? updatedAddedExercises[exerciseIndex].weightUnit = 'kg' : updatedAddedExercises[exerciseIndex].weightUnit = 'lbs';
-        // setAddedExercises(updatedAddedExercises);
     }
 
-    const handleRemoveExercise = (exerciseIndex: number) => {
+    const handleRemoveExercise = (exerciseIndex: number): void => {
         setExerciseIndexToRemove(exerciseIndex);
         setIsConfirmRemoveExerciseOpen(true);
     }
@@ -132,7 +130,7 @@ const Exercise = ({ exercises, setExercises, oldExercises, setOldExercises, isCo
     // }, [addedExercises]);
 
 
-    const handleNotesChange = (exerciseIndex: number, value: string) => {
+    const handleNotesChange = (exerciseIndex: number, value: string): void => {
         setExercises(prevExercises => {
 
             const exercisesCopy: ModelExercise[] = prevExercises.map(exercise => ({ ...exercise }));
@@ -143,7 +141,7 @@ const Exercise = ({ exercises, setExercises, oldExercises, setOldExercises, isCo
         });
     }
 
-    const handleSetCompletion = (exerciseIndex: number, setIndex: number) => {
+    const handleSetCompletion = (exerciseIndex: number, setIndex: number): void => {
         setExercises(prevExercises => {
             const exercisesCopy: ModelExercise[] = prevExercises.map(exercise => ({
                 ...exercise,
@@ -158,6 +156,10 @@ const Exercise = ({ exercises, setExercises, oldExercises, setOldExercises, isCo
             return exercisesCopy;
         });
     };
+
+    const handleRemoveSet = () => {
+        console.log("Set Deleted")
+    }
 
     // useEffect(() => {
     //     console.log("Component re-rendered")
@@ -241,16 +243,14 @@ const Exercise = ({ exercises, setExercises, oldExercises, setOldExercises, isCo
                         <div className="flex flex-row space-x-5">
                             <div>{exercise.sets[0].weight_unit}</div>
                             <div>Reps</div>
-                            <div className="text-xs rounded-full h-6 w-6 flex items-center justify-center focus:outline-none">{'❌'}</div>
                             <div className="text-green-500 text-xs rounded-full h-6 w-6 flex items-center justify-center focus:outline-none">&#10003;</div>
                         </div>
                     </div>
 
                     {exercise.sets.map((set, setIndex) => (
                         <div key={setIndex} className={`flex flex-row justify-between mt-2 ${exercise.sets[setIndex].isCompleted ? 'bg-green-100' : ''}`}>
-                            <button className={`text-center rounded focus:outline-none w-5 ${exercise.sets[setIndex].isCompleted ? '' : 'bg-gray-200'}`}>
-                                {set.set_number}
-                            </button>
+
+                            <SetButtonDropDown set_number={set.set_number} isCompleted={exercise.sets[setIndex].isCompleted} />
 
                             <div className="text-center">
                                 {(oldExercises[exerciseIndex]?.sets[setIndex] && oldExercises[exerciseIndex]?.sets[setIndex].weight >= 0 && oldExercises[exerciseIndex]?.sets[setIndex].reps >= 0) ? oldExercises[exerciseIndex].sets[setIndex].weight + oldExercises[exerciseIndex].sets[setIndex].weight_unit + ' x ' + oldExercises[exerciseIndex].sets[setIndex].reps : '--'}
@@ -274,8 +274,6 @@ const Exercise = ({ exercises, setExercises, oldExercises, setOldExercises, isCo
                                     className={`rounded focus:outline-none w-8 ${exercise.sets[setIndex].isCompleted ? 'bg-green-100' : 'bg-gray-200'}`}
                                     placeholder={oldExercises[exerciseIndex]?.sets[setIndex]?.reps >= 0 ? oldExercises[exerciseIndex].sets[setIndex].reps.toString() : ''}
                                 />
-
-                                <button className="text-xs text-black rounded-full h-6 w-6 flex items-center justify-center focus:outline-none">{'❌'}</button>
 
                                 <button className={`text-xs rounded-full h-6 w-6 flex items-center justify-center focus:outline-none ${exercise.sets[setIndex].isCompleted ? 'bg-green-500' : 'bg-gray-100'}`} onClick={() => handleSetCompletion(exerciseIndex, setIndex)}>&#10003;</button>
                             </div>
