@@ -12,6 +12,7 @@ import ModelExercise from '../Models/ModelExercise';
 import ModelWorkout from '../Models/ModelWorkout';
 import { postWorkout } from '../MainComponents/lib';
 import ConfirmWorkoutCompletion from './ConfirmWorkoutCompletion';
+import ConfirmCancelWorkout from './ConfirmCancelWorkout';
 
 interface Props {
     isStarted: boolean;
@@ -48,9 +49,15 @@ const WorkoutTracker = ({ isStarted, setIsStarted }: Props) => {
 
     const [isWorkoutFinished, setIsWorkoutFinished] = useState<boolean>(false);
 
+    const [showCancelWorkoutPopUp, setShowCancelWorkoutPopUp] = useState<boolean>(false);
+
     const handleFinishWorkout = (): void => {
         setIsWorkoutFinished(true);
     };
+
+    const handleCancelWorkout = (): void => {
+        setShowCancelWorkoutPopUp(true);
+    }
 
     const [exerciseIndexToRemove, setExerciseIndexToRemove] = useState<number>(-1); // index of exercise to remove OR index of exercise to remove a set from
 
@@ -100,9 +107,11 @@ const WorkoutTracker = ({ isStarted, setIsStarted }: Props) => {
                 setIsStarted={setIsStarted}
             />}
 
+            {showCancelWorkoutPopUp && <ConfirmCancelWorkout setIsStarted={setIsStarted} setShowCancelWorkoutPopUp={setShowCancelWorkoutPopUp} />}
+
             <button className='text-blue-500 bg-blue-100 px-4 rounded mt-10' onClick={() => setIsAddExerciseOpen(true)}>Add Exercise</button>
             <button className='text-green-500 bg-green-100 px-4 rounded mt-10' onClick={() => handleFinishWorkout()}>Finish Workout</button>
-            <button className=' text-red-500 bg-red-100 px-4 rounded mt-3'>Cancel Workout</button>
+            <button className=' text-red-500 bg-red-100 px-4 rounded mt-3' onClick={() => handleCancelWorkout()}>Cancel Workout</button>
 
         </div >
     )
