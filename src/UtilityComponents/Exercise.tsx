@@ -21,17 +21,11 @@ interface Props {
     setAddedExerciseIds: React.Dispatch<React.SetStateAction<number[]>>;
     exerciseIndexToRemove: number;
     setExerciseIndexToRemove: React.Dispatch<React.SetStateAction<number>>;
+    showReplaceExercisePopUp: boolean; 
+    setShowReplaceExercisePopUp: React.Dispatch<React.SetStateAction<boolean>>; 
 }
 
-const Exercise = ({ exercises, setExercises, oldExercises, setOldExercises, isConfirmRemoveExerciseOpen, setIsConfirmRemoveExerciseOpen, addedExerciseIds, setAddedExerciseIds, exerciseIndexToRemove, setExerciseIndexToRemove }: Props) => {
-
-    // array of exercises with sets 
-    // const [exercises, setExercises] = useState<ModelExercise[]>([]);
-
-    // Copy of above to hold previous values 
-    // const [oldExercises, setOldExercises] = useState<ModelExercise[]>([]);
-
-    // const [removeExercise, setRemoveExercise] = useState<boolean>(false);
+const Exercise = ({ exercises, setExercises, oldExercises, setOldExercises, isConfirmRemoveExerciseOpen, setIsConfirmRemoveExerciseOpen, addedExerciseIds, setAddedExerciseIds, exerciseIndexToRemove, setExerciseIndexToRemove, showReplaceExercisePopUp, setShowReplaceExercisePopUp }: Props) => {
 
     // Auto fill exercise info 
     useEffect(() => {
@@ -49,6 +43,8 @@ const Exercise = ({ exercises, setExercises, oldExercises, setOldExercises, isCo
                 }
             });
         }
+
+        console.log("exercise ids changed")
 
         return () => {
             ignore = true;
@@ -158,10 +154,6 @@ const Exercise = ({ exercises, setExercises, oldExercises, setOldExercises, isCo
             return exercisesCopy;
         });
     };
-
-    const handleRemoveSet = () => {
-        console.log("Set Deleted")
-    }
 
     // useEffect(() => {
     //     console.log("Component re-rendered")

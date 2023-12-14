@@ -5,7 +5,7 @@ import { format } from "date-fns";
 import WorkoutTimer from './WorkoutTimer';
 import WorkoutHeader from './WorkoutHeader';
 import ExerciseList from './ExerciseList';
-import GrayedBg from './GrayedBg';
+// import GrayedBg from './GrayedBg';
 import Exercise from './Exercise';
 import ModelExerciseInList from '../Interfaces/ResponseModels/IResponseModelExerciseInList';
 import ModelExercise from '../Models/ModelExercise';
@@ -13,6 +13,7 @@ import ModelWorkout from '../Models/ModelWorkout';
 import { postWorkout } from '../MainComponents/lib';
 import ConfirmWorkoutCompletion from './ConfirmWorkoutCompletion';
 import ConfirmCancelWorkout from './ConfirmCancelWorkout';
+import ConfirmReplaceExercise from './ConfirmReplaceExercise';
 
 interface Props {
     isStarted: boolean;
@@ -51,6 +52,8 @@ const WorkoutTracker = ({ isStarted, setIsStarted }: Props) => {
 
     const [showCancelWorkoutPopUp, setShowCancelWorkoutPopUp] = useState<boolean>(false);
 
+    const [showReplaceExercisePopUp, setShowReplaceExercisePopUp] = useState<boolean>(false);
+
     const handleFinishWorkout = (): void => {
         setIsWorkoutFinished(true);
     };
@@ -81,13 +84,15 @@ const WorkoutTracker = ({ isStarted, setIsStarted }: Props) => {
                 setAddedExerciseIds={setAddedExerciseIds}
                 exerciseIndexToRemove={exerciseIndexToRemove}
                 setExerciseIndexToRemove={setExerciseIndexToRemove}
+                showReplaceExercisePopUp={showReplaceExercisePopUp}
+                setShowReplaceExercisePopUp={setShowReplaceExercisePopUp}
             />}
 
-            <GrayedBg isAddExerciseOpen={isAddExerciseOpen}
+            {/* <GrayedBg isAddExerciseOpen={isAddExerciseOpen}
                 setIsAddExerciseOpen={setIsAddExerciseOpen}
                 isConfirmRemoveExerciseOpen={isConfirmRemoveExerciseOpen}
                 setIsConfirmExerciseOpen={setIsConfirmRemoveExerciseOpen}
-            />
+            /> */}
 
             <ExerciseList isAddExerciseOpen={isAddExerciseOpen}
                 setIsAddExerciseOpen={setIsAddExerciseOpen}
