@@ -1,3 +1,5 @@
+// This component renders a button with the set number that creates a drop down when clicked for each set of an exercise. 
+
 import React, { useState } from 'react';
 import GrayBg from './GrayBg';
 import ModelExercise from '../Models/ModelExercise';

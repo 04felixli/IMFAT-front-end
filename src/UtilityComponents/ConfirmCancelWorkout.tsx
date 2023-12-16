@@ -25,7 +25,7 @@ const ConfirmCancelWorkout = ({ setIsStarted, setShowCancelWorkoutPopUp }: Props
                 <div>Cancel Workout?</div>
                 <p className="text-sm">All workout progress will be lost.</p>
                 <div className="flex flex-row justify-around w-full">
-                    <button onClick={handleCancelWorkout}>Cancel</button>
+                    <button onClick={handleCancelWorkout} className="text-red-500 bg-red-100">Cancel Workout</button>
                     <button onClick={closePopUp}>Resume</button>
                 </div>
             </div>

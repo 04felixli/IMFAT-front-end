@@ -3,23 +3,29 @@ import './Styles/ExerciseList.css';
 import { useState, useEffect } from 'react';
 import { add, format } from "date-fns";
 // import GrayedBg from './GrayedBg';
-import { fetchExercises } from '../MainComponents/lib';
+import { fetchExercises, fetchAutoFillInfo } from '../MainComponents/lib';
 import ModelExerciseInList from '../Interfaces/ResponseModels/IResponseModelExerciseInList';
 import GrayBg from './GrayBg';
+import ModelExercise from '../Models/ModelExercise';
 
 interface Props {
+    exercises: ModelExercise[];
+    setExercises: React.Dispatch<React.SetStateAction<ModelExercise[]>>;
+    oldExercises: ModelExercise[];
+    setOldExercises: React.Dispatch<React.SetStateAction<ModelExercise[]>>;
+    exerciseIndexToReplace: number;
+    setExerciseIndexToReplace: React.Dispatch<React.SetStateAction<number>>;
+    addOrReplaceExercise: string;
+    setAddOrReplaceExercise: React.Dispatch<React.SetStateAction<string>>;
     isAddExerciseOpen: boolean;
     setIsAddExerciseOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    addedExercises: ModelExerciseInList[];
-    setAddedExercises: React.Dispatch<React.SetStateAction<ModelExerciseInList[]>>;
-    addedExerciseIds: number[];
     setAddedExerciseIds: React.Dispatch<React.SetStateAction<number[]>>;
 }
 
-const ExerciseList = ({ isAddExerciseOpen, setIsAddExerciseOpen, addedExercises, setAddedExercises, addedExerciseIds, setAddedExerciseIds }: Props) => {
+const ExerciseList = ({ exercises, setExercises, oldExercises, setOldExercises, exerciseIndexToReplace, setExerciseIndexToReplace, addOrReplaceExercise, setAddOrReplaceExercise, isAddExerciseOpen, setIsAddExerciseOpen, setAddedExerciseIds }: Props) => {
 
     // Store the list of exercises
-    const [exercises, setExercises] = useState<ModelExerciseInList[] | null>(null) // "exercises" = null when first fetching data, [] when api doesn't find any exercises
+    const [exerciseList, setExerciseList] = useState<ModelExerciseInList[] | null>(null) // "exercises" = null when first fetching data, [] when api doesn't find any exercises
     const [selectedExerciseIds, setSelectedExerciseIds] = useState<number[]>([]);
 
     // const [selectedExercises, setSelectedExercises] = useState<ModelExerciseInList[]>([]);
@@ -28,7 +34,7 @@ const ExerciseList = ({ isAddExerciseOpen, setIsAddExerciseOpen, addedExercises,
     // get list of exercises on user input
     const handleSearchInput = (e: React.ChangeEvent<HTMLInputElement>): void => {
         fetchExercises(e.target.value).then((response) => {
-            setExercises(response);
+            setExerciseList(response);
         });
 
         setSearchInput(e.target.value);
@@ -37,22 +43,29 @@ const ExerciseList = ({ isAddExerciseOpen, setIsAddExerciseOpen, addedExercises,
     // get initial list of exercises when component first loads
     useEffect(() => {
         fetchExercises().then((response) => {
-            setExercises(response);
+            setExerciseList(response);
         });
     }, []);
 
     const handleExerciseSelection = (exercise: ModelExerciseInList): void => {
 
-        isSelected(exercise) ?
-            setSelectedExerciseIds((prev) => prev.filter(id => id !== exercise.id)) : // remove id if already selected 
-            setSelectedExerciseIds((prev) => [...prev, exercise.id]); // add id if not selected 
+        if (isSelected(exercise)) {
+            if (addOrReplaceExercise === "Add") {
+                setSelectedExerciseIds((prev) => prev.filter(id => id !== exercise.id)) // remove id if already selected
+            } else {
+                setSelectedExerciseIds([]); // Clear selected exercises 
+            }
+        } else {
+            if (addOrReplaceExercise === "Add") {
+                setSelectedExerciseIds((prev) => [...prev, exercise.id]); // add id if not selected
+            } else {
+                setSelectedExerciseIds([exercise.id]) // Can only have one exercise for replacing exercise 
+            }
+        }
 
-        // const exerciseToFind: ModelExerciseInList | null = isSelected(exercise);
-
-        // // unselect or select the exercise depending on if it is selected already or not
-        // exerciseToFind === null ?
-        //     setSelectedExercises((prev) => [...prev, exercise]) :
-        //     setSelectedExercises((prev) => prev.filter(item => item !== exerciseToFind));
+        // isSelected(exercise) ?
+        // setSelectedExerciseIds((prev) => prev.filter(id => id !== exercise.id)) : // remove id if already selected 
+        // setSelectedExerciseIds((prev) => [...prev, exercise.id]); // add id if not selected 
     }
 
     const isSelected = (exercise: ModelExerciseInList): boolean => {
@@ -61,53 +74,71 @@ const ExerciseList = ({ isAddExerciseOpen, setIsAddExerciseOpen, addedExercises,
 
         return selectedExerciseIds.includes(id);
 
-        // const exerciseToFind: ModelExerciseInList | undefined = selectedExercises.find(item => item.id === exercise.id);
-
-        // return exerciseToFind === undefined ? null : exerciseToFind;
     }
 
     const handleAddExercise = (): void => {
+        if (addOrReplaceExercise === "Add") {
+            setAddedExerciseIds((prev) => [
+                ...prev,
+                ...selectedExerciseIds.filter(
+                    (selectedExerciseId) => !prev.some((id) => id === selectedExerciseId)
+                )
+            ]);
+        } else {
+            setAddedExerciseIds((prev) => {
+                const addedExerciseIdsCopy = [...prev];
 
-        setAddedExerciseIds((prev) => [
-            ...prev,
-            ...selectedExerciseIds.filter(
-                (selectedExerciseId) => !prev.some((id) => id === selectedExerciseId)
-            )
-        ])
+                addedExerciseIdsCopy[exerciseIndexToReplace] = selectedExerciseIds[0]; // change the exercise id for replace
+
+                console.log(addedExerciseIdsCopy)
+
+                return addedExerciseIdsCopy;
+            })
+
+            fetchAutoFillInfo(selectedExerciseIds).then((response) => {
+                setExercises(prevExercises => {
+
+                    const exercisesCopy: ModelExercise[] = prevExercises.map(exercise => ({
+                        ...exercise,
+                        sets: exercise.sets.map(set => ({ ...set }))
+                    }));
+
+                    exercisesCopy[exerciseIndexToReplace] = response[0];
+
+                    return exercisesCopy;
+                });
+
+                setOldExercises(prevExercises => {
+
+                    const exercisesCopy: ModelExercise[] = prevExercises.map(exercise => ({
+                        ...exercise,
+                        sets: exercise.sets.map(set => ({ ...set }))
+                    }));
+
+                    exercisesCopy[exerciseIndexToReplace] = response[0];
+
+                    return exercisesCopy;
+                });
+            });
+        }
 
         setSelectedExerciseIds([]);
         setIsAddExerciseOpen(false);
-
-        // setAddedExercises((prev) => [
-        //     ...prev,
-        //     ...selectedExercises.filter(
-        //         (selectedExercise) => !prev.some((addedExercise) => addedExercise.id === selectedExercise.id)
-        //     )
-        // ]);
-
-        // setSelectedExercises([]);
-        // setIsAddExerciseOpen(false);
+        setAddOrReplaceExercise("Add");
+        setExerciseIndexToReplace(-1);
     }
 
     const closePopUp = (): void => {
         setIsAddExerciseOpen(false);
+        setAddOrReplaceExercise("Add");
     }
-
-
-    // useEffect(() => {
-    //     console.log(selectedExerciseIds);
-    // }, [selectedExerciseIds]);
-
-    // useEffect(() => {
-    //     console.log(addedExerciseIds);
-    // }, [addedExerciseIds]);
 
     return (
         <div className={isAddExerciseOpen ? '' : 'hidden'}>
             <div className='rounded showAddExerciseList'>
                 <div className='flex flex-row justify-between w-full px-4 mt-5'>
                     <button className='text-blue-500' onClick={() => handleAddExercise()}>
-                        Add
+                        {addOrReplaceExercise}
                     </button>
 
                     <div className='flex'>
@@ -155,10 +186,10 @@ const ExerciseList = ({ isAddExerciseOpen, setIsAddExerciseOpen, addedExercises,
 
                 <ul className='w-full mt-5'>
                     {
-                        !exercises ? (
+                        !exerciseList ? (
                             <li>Loading...</li>
-                        ) : exercises.length !== 0 ? (
-                            exercises.map((exercise, index) => (
+                        ) : exerciseList.length !== 0 ? (
+                            exerciseList.map((exercise, index) => (
                                 <li key={index} className={`border px-4 ${isSelected(exercise) ? 'bg-blue-100' : ''}`} onClick={() => handleExerciseSelection(exercise)}>
                                     <div className='flex flex-row justify-between'>
                                         <div>

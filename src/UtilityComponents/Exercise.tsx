@@ -8,6 +8,8 @@ import ModelExercise from "../Models/ModelExercise";
 import { fetchAutoFillInfo } from "../MainComponents/lib";
 import ModelSet from "../Models/ModelSet";
 import SetButtonDropDown from "./SetButtonDropDown";
+import ConfirmReplaceExercise from "./ConfirmReplaceExercise";
+import ReplaceExerciseButton from "./ReplaceExerciseButton";
 
 
 interface Props {
@@ -21,11 +23,13 @@ interface Props {
     setAddedExerciseIds: React.Dispatch<React.SetStateAction<number[]>>;
     exerciseIndexToRemove: number;
     setExerciseIndexToRemove: React.Dispatch<React.SetStateAction<number>>;
-    showReplaceExercisePopUp: boolean; 
-    setShowReplaceExercisePopUp: React.Dispatch<React.SetStateAction<boolean>>; 
+    addOrReplaceExercise: string;
+    setAddOrReplaceExercise: React.Dispatch<React.SetStateAction<string>>
+    setIsAddExerciseOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    setExerciseIndexToReplace: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const Exercise = ({ exercises, setExercises, oldExercises, setOldExercises, isConfirmRemoveExerciseOpen, setIsConfirmRemoveExerciseOpen, addedExerciseIds, setAddedExerciseIds, exerciseIndexToRemove, setExerciseIndexToRemove, showReplaceExercisePopUp, setShowReplaceExercisePopUp }: Props) => {
+const Exercise = ({ exercises, setExercises, oldExercises, setOldExercises, isConfirmRemoveExerciseOpen, setIsConfirmRemoveExerciseOpen, addedExerciseIds, setAddedExerciseIds, exerciseIndexToRemove, setExerciseIndexToRemove, addOrReplaceExercise, setAddOrReplaceExercise, setIsAddExerciseOpen, setExerciseIndexToReplace }: Props) => {
 
     // Auto fill exercise info 
     useEffect(() => {
@@ -119,15 +123,6 @@ const Exercise = ({ exercises, setExercises, oldExercises, setOldExercises, isCo
         setIsConfirmRemoveExerciseOpen(true);
     }
 
-    // useEffect(() => {
-    //     console.log("Exercise Sets ", exerciseSets);
-    // }, [exerciseSets]);
-
-    // useEffect(() => {
-    //     console.log("added exercises: ", addedExercises);
-    // }, [addedExercises]);
-
-
     const handleNotesChange = (exerciseIndex: number, value: string): void => {
         setExercises(prevExercises => {
 
@@ -155,15 +150,6 @@ const Exercise = ({ exercises, setExercises, oldExercises, setOldExercises, isCo
         });
     };
 
-    // useEffect(() => {
-    //     console.log("Component re-rendered")
-    // }, []);
-
-    // useEffect(() => {
-    //     console.log("exercises are: ", exercises);
-    //     console.log("exercise Ids are: ", addedExerciseIds);
-    // }, [exercises, addedExerciseIds]);
-
     return (
         <div className={exercises ? 'flex flex-col mt-5' : 'hidden'}>
             {exercises.map((exercise, exerciseIndex) => (
@@ -181,13 +167,19 @@ const Exercise = ({ exercises, setExercises, oldExercises, setOldExercises, isCo
                                 {exercise.sets.length > 0 ? exercise.sets[0].weight_unit : oldExercises[exerciseIndex].sets[0].weight_unit}
                             </button>
 
-                            <button className="text-sm bg-blue-100 rounded-full h-6 w-6 flex items-center justify-center focus:outline-none">
-                                <img
-                                    src='/ReplaceExerciseIcon.svg'
-                                    alt="Replace Exercise Icon"
-                                    className="h-4 w-4"
-                                />
-                            </button>
+                            <ReplaceExerciseButton
+                                exercises={exercises}
+                                setExercises={setExercises}
+                                exerciseIndex={exerciseIndex}
+                                setExerciseIndexToReplace={setExerciseIndexToReplace}
+                                oldExercises={oldExercises}
+                                setOldExercises={setOldExercises}
+                                addedExerciseIds={addedExerciseIds}
+                                setAddedExerciseIds={setAddedExerciseIds}
+                                addOrReplaceExercise={addOrReplaceExercise}
+                                setAddOrReplaceExercise={setAddOrReplaceExercise}
+                                setIsAddExerciseOpen={setIsAddExerciseOpen}
+                            />
 
                             <button className="text-xs bg-red-100 rounded-full h-6 w-6 flex items-center justify-center focus:outline-none"
                                 onClick={() => setIsConfirmRemoveExerciseOpen(true)}
@@ -198,7 +190,6 @@ const Exercise = ({ exercises, setExercises, oldExercises, setOldExercises, isCo
                                     className="h-4 w-4"
                                     onClick={() => handleRemoveExercise(exerciseIndex)}
                                 />
-                                {/* {'❌'} */}
                             </button>
 
                             {isConfirmRemoveExerciseOpen && <ConfirmRemoveExercise exerciseIndexToRemove={exerciseIndexToRemove}

@@ -17,7 +17,7 @@ const StartWorkout = () => {
 
             <h1 className="title"> {isStarted ? getTimeOfDay() : "Start "} Workout </h1>
 
-            <button className={"start-workout-button default-border " + (isStarted ? "hide-tracker" : '')} onClick={() => setIsStarted((prev) => !prev)}> Start New Workout </button>
+            <button className={"start-workout-button " + (isStarted ? "hide-tracker" : '')} onClick={() => setIsStarted((prev) => !prev)}> Start New Workout </button>
 
             {isStarted && <section>
                 <WorkoutTracker isStarted={isStarted} setIsStarted={setIsStarted} />

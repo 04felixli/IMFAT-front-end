@@ -25,9 +25,6 @@ const WorkoutTracker = ({ isStarted, setIsStarted }: Props) => {
     // Array of exercises the user would like to track identified by exercise id
     const [addedExerciseIds, setAddedExerciseIds] = useState<number[]>([]);
 
-    // This array holds a list of selected exercises by the user
-    const [addedExercises, setAddedExercises] = useState<ModelExerciseInList[]>([]);
-
     // is exercise list open 
     const [isAddExerciseOpen, setIsAddExerciseOpen] = useState<boolean>(false);
 
@@ -52,8 +49,6 @@ const WorkoutTracker = ({ isStarted, setIsStarted }: Props) => {
 
     const [showCancelWorkoutPopUp, setShowCancelWorkoutPopUp] = useState<boolean>(false);
 
-    const [showReplaceExercisePopUp, setShowReplaceExercisePopUp] = useState<boolean>(false);
-
     const handleFinishWorkout = (): void => {
         setIsWorkoutFinished(true);
     };
@@ -62,7 +57,11 @@ const WorkoutTracker = ({ isStarted, setIsStarted }: Props) => {
         setShowCancelWorkoutPopUp(true);
     }
 
-    const [exerciseIndexToRemove, setExerciseIndexToRemove] = useState<number>(-1); // index of exercise to remove OR index of exercise to remove a set from
+    const [exerciseIndexToRemove, setExerciseIndexToRemove] = useState<number>(-1); // index of exercise to remove
+
+    const [addOrReplaceExercise, setAddOrReplaceExercise] = useState<string>("Add"); // "Add" or "Replace" exercise
+
+    const [exerciseIndexToReplace, setExerciseIndexToReplace] = useState<number>(-1);
 
     // useEffect(() => {
     //     console.log("exercises are: ", exercises);
@@ -84,21 +83,23 @@ const WorkoutTracker = ({ isStarted, setIsStarted }: Props) => {
                 setAddedExerciseIds={setAddedExerciseIds}
                 exerciseIndexToRemove={exerciseIndexToRemove}
                 setExerciseIndexToRemove={setExerciseIndexToRemove}
-                showReplaceExercisePopUp={showReplaceExercisePopUp}
-                setShowReplaceExercisePopUp={setShowReplaceExercisePopUp}
+                addOrReplaceExercise={addOrReplaceExercise}
+                setAddOrReplaceExercise={setAddOrReplaceExercise}
+                setIsAddExerciseOpen={setIsAddExerciseOpen}
+                setExerciseIndexToReplace={setExerciseIndexToReplace}
             />}
 
-            {/* <GrayedBg isAddExerciseOpen={isAddExerciseOpen}
+            <ExerciseList
+                exercises={exercises}
+                setExercises={setExercises}
+                oldExercises={oldExercises}
+                setOldExercises={setOldExercises}
+                exerciseIndexToReplace={exerciseIndexToReplace}
+                setExerciseIndexToReplace={setExerciseIndexToReplace}
+                addOrReplaceExercise={addOrReplaceExercise}
+                setAddOrReplaceExercise={setAddOrReplaceExercise}
+                isAddExerciseOpen={isAddExerciseOpen}
                 setIsAddExerciseOpen={setIsAddExerciseOpen}
-                isConfirmRemoveExerciseOpen={isConfirmRemoveExerciseOpen}
-                setIsConfirmExerciseOpen={setIsConfirmRemoveExerciseOpen}
-            /> */}
-
-            <ExerciseList isAddExerciseOpen={isAddExerciseOpen}
-                setIsAddExerciseOpen={setIsAddExerciseOpen}
-                addedExercises={addedExercises}
-                setAddedExercises={setAddedExercises}
-                addedExerciseIds={addedExerciseIds}
                 setAddedExerciseIds={setAddedExerciseIds}
             />
 
