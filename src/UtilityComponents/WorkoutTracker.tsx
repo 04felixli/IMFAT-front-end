@@ -7,7 +7,7 @@ import WorkoutHeader from './WorkoutHeader';
 import ExerciseList from './ExerciseList';
 // import GrayedBg from './GrayedBg';
 import Exercise from './Exercise';
-import ModelExerciseInList from '../Interfaces/ResponseModels/IResponseModelExerciseInList';
+import ModelExerciseInList from '../Interfaces/ResponseModels/IRMExerciseInList';
 import ModelExercise from '../Models/ModelExercise';
 import ModelWorkout from '../Models/ModelWorkout';
 import { postWorkout } from '../MainComponents/lib';

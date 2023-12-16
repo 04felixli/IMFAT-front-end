@@ -1,22 +1,21 @@
 // This file handles all API interactions 
 
-import IModelExerciseInList from "../Interfaces/ResponseModels/IRMExerciseInList";
+import IRMExerciseInList from "../Interfaces/ResponseModels/IRMExerciseInList";
 import ModelExercise from "../Models/ModelExercise";
 import ModelSet from "../Models/ModelSet";
-import IResponseModelPastExercise from "../Interfaces/ResponseModels/IRMPastExercise";
-import IResponseModelPastSet from "../Interfaces/ResponseModels/IRMPastSet";
 import ModelWorkout from "../Models/ModelWorkout";
 import axios, { AxiosResponse } from 'axios';
+import IRMExerciseHistoryNoDetails from "../Interfaces/ResponseModels/IRMWorkoutHistoryNoDetails";
+import IRMPastExercise from "../Interfaces/ResponseModels/IRMPastExercise";
+import IRMPastSet from "../Interfaces/ResponseModels/IRMPastSet";
 
 
 const url = process.env.REACT_APP_API_URL;
 
 // This function handles fetching exercises for exercise list
-export const fetchExercises = async (searchInput = ''): Promise<IModelExerciseInList[]> => {
+export const fetchExercises = async (searchInput = ''): Promise<IRMExerciseInList[]> => {
     try {
-        console.log("api url is: " + `${url}/api/get_exercises?searchInput=${searchInput}`);
-
-        const response: AxiosResponse<IModelExerciseInList[]> = await axios.get(`${url}/api/get_exercises?searchInput=${searchInput}`);
+        const response: AxiosResponse<IRMExerciseInList[]> = await axios.get(`${url}/api/get_exercises?searchInput=${searchInput}`);
 
         if (response.status !== 200) {
             throw new Error(`HTTP Error! Status: ${response.status}`);
@@ -35,9 +34,7 @@ export const fetchAutoFillInfo = async (addedExerciseIds: number[]): Promise<Mod
     try {
         const idsAsString: string = addedExerciseIds.join(', ');
 
-        console.log("api url is: " + `${url}/api/get_latest_exercise_info?exercise_ids=${idsAsString}`);
-
-        const response: AxiosResponse<IResponseModelPastExercise[]> = await axios.get(`${url}/api/get_latest_exercise_info?exercise_ids=${idsAsString}`);
+        const response: AxiosResponse<IRMPastExercise[]> = await axios.get(`${url}/api/get_latest_exercise_info?exercise_ids=${idsAsString}`);
 
         if (response.status !== 200) {
             throw new Error(`HTTP Error! Status: ${response.status}`);
@@ -45,8 +42,8 @@ export const fetchAutoFillInfo = async (addedExerciseIds: number[]): Promise<Mod
 
         const info = response.data;
 
-        const modifiedInfo: ModelExercise[] = info.map((exercise: IResponseModelPastExercise) => {
-            const setsWithCompletion: ModelSet[] = exercise.sets.map((set: IResponseModelPastSet) => ({
+        const modifiedInfo: ModelExercise[] = info.map((exercise: IRMPastExercise) => {
+            const setsWithCompletion: ModelSet[] = exercise.sets.map((set: IRMPastSet) => ({
                 ...set,
                 isCompleted: false, // Set the initial value of isCompleted for each set
             }));
@@ -57,8 +54,6 @@ export const fetchAutoFillInfo = async (addedExerciseIds: number[]): Promise<Mod
             };
         });
 
-        // console.log("Modified info is: ", modifiedInfo);
-
         return modifiedInfo;
 
     } catch (error) {
@@ -67,7 +62,6 @@ export const fetchAutoFillInfo = async (addedExerciseIds: number[]): Promise<Mod
     }
 }
 
-// Post a workout
 export const postWorkout = async (workout: ModelWorkout): Promise<void> => {
     try {
         const response: AxiosResponse<void> = await axios.post(`${url}/api/post_workout`, workout);
@@ -84,3 +78,19 @@ export const postWorkout = async (workout: ModelWorkout): Promise<void> => {
         throw error;
     }
 };
+
+export const fetchExerciseHistoryNoDetails = async (): Promise<IRMExerciseHistoryNoDetails[]> => {
+    try {
+        const response: AxiosResponse<IRMExerciseHistoryNoDetails[]> = await axios.get(`${url}/api/get_workout_history_without_details`);
+
+        if (response.status !== 200) {
+            throw new Error(`HTTP Error! Status: ${response.status}`);
+        }
+
+        return response.data;
+
+    } catch (error) {
+        console.error('There was an error fetching exercise history without details: ', error);
+        throw error;
+    }
+}

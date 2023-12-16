@@ -4,9 +4,10 @@ import { useState, useEffect } from 'react';
 import { add, format } from "date-fns";
 // import GrayedBg from './GrayedBg';
 import { fetchExercises, fetchAutoFillInfo } from '../MainComponents/lib';
-import ModelExerciseInList from '../Interfaces/ResponseModels/IResponseModelExerciseInList';
+import ModelExerciseInList from '../Interfaces/ResponseModels/IRMExerciseInList';
 import GrayBg from './GrayBg';
 import ModelExercise from '../Models/ModelExercise';
+import ModelSet from '../Models/ModelSet';
 
 interface Props {
     exercises: ModelExercise[];
@@ -33,7 +34,7 @@ const ExerciseList = ({ exercises, setExercises, oldExercises, setOldExercises, 
 
     // get list of exercises on user input
     const handleSearchInput = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        fetchExercises(e.target.value).then((response) => {
+        fetchExercises(e.target.value).then((response: ModelExerciseInList[]) => {
             setExerciseList(response);
         });
 
@@ -42,7 +43,7 @@ const ExerciseList = ({ exercises, setExercises, oldExercises, setOldExercises, 
 
     // get initial list of exercises when component first loads
     useEffect(() => {
-        fetchExercises().then((response) => {
+        fetchExercises().then((response: ModelExerciseInList[]) => {
             setExerciseList(response);
         });
     }, []);
@@ -51,21 +52,17 @@ const ExerciseList = ({ exercises, setExercises, oldExercises, setOldExercises, 
 
         if (isSelected(exercise)) {
             if (addOrReplaceExercise === "Add") {
-                setSelectedExerciseIds((prev) => prev.filter(id => id !== exercise.id)) // remove id if already selected
+                setSelectedExerciseIds((prev: number[]) => prev.filter((id: number) => id !== exercise.id)) // remove id if already selected
             } else {
                 setSelectedExerciseIds([]); // Clear selected exercises 
             }
         } else {
             if (addOrReplaceExercise === "Add") {
-                setSelectedExerciseIds((prev) => [...prev, exercise.id]); // add id if not selected
+                setSelectedExerciseIds((prev: number[]) => [...prev, exercise.id]); // add id if not selected
             } else {
                 setSelectedExerciseIds([exercise.id]) // Can only have one exercise for replacing exercise 
             }
         }
-
-        // isSelected(exercise) ?
-        // setSelectedExerciseIds((prev) => prev.filter(id => id !== exercise.id)) : // remove id if already selected 
-        // setSelectedExerciseIds((prev) => [...prev, exercise.id]); // add id if not selected 
     }
 
     const isSelected = (exercise: ModelExerciseInList): boolean => {
@@ -78,29 +75,27 @@ const ExerciseList = ({ exercises, setExercises, oldExercises, setOldExercises, 
 
     const handleAddExercise = (): void => {
         if (addOrReplaceExercise === "Add") {
-            setAddedExerciseIds((prev) => [
+            setAddedExerciseIds((prev: number[]) => [
                 ...prev,
                 ...selectedExerciseIds.filter(
-                    (selectedExerciseId) => !prev.some((id) => id === selectedExerciseId)
+                    (selectedExerciseId: number) => !prev.some((id: number) => id === selectedExerciseId)
                 )
             ]);
         } else {
-            setAddedExerciseIds((prev) => {
+            setAddedExerciseIds((prev: number[]) => {
                 const addedExerciseIdsCopy = [...prev];
 
                 addedExerciseIdsCopy[exerciseIndexToReplace] = selectedExerciseIds[0]; // change the exercise id for replace
 
-                console.log(addedExerciseIdsCopy)
-
                 return addedExerciseIdsCopy;
             })
 
-            fetchAutoFillInfo(selectedExerciseIds).then((response) => {
-                setExercises(prevExercises => {
+            fetchAutoFillInfo(selectedExerciseIds).then((response: ModelExercise[]) => {
+                setExercises((prevExercises: ModelExercise[]) => {
 
-                    const exercisesCopy: ModelExercise[] = prevExercises.map(exercise => ({
+                    const exercisesCopy: ModelExercise[] = prevExercises.map((exercise: ModelExercise) => ({
                         ...exercise,
-                        sets: exercise.sets.map(set => ({ ...set }))
+                        sets: exercise.sets.map((set: ModelSet) => ({ ...set }))
                     }));
 
                     exercisesCopy[exerciseIndexToReplace] = response[0];
@@ -108,11 +103,11 @@ const ExerciseList = ({ exercises, setExercises, oldExercises, setOldExercises, 
                     return exercisesCopy;
                 });
 
-                setOldExercises(prevExercises => {
+                setOldExercises((prevExercises: ModelExercise[]) => {
 
-                    const exercisesCopy: ModelExercise[] = prevExercises.map(exercise => ({
+                    const exercisesCopy: ModelExercise[] = prevExercises.map((exercise: ModelExercise) => ({
                         ...exercise,
-                        sets: exercise.sets.map(set => ({ ...set }))
+                        sets: exercise.sets.map((set: ModelSet) => ({ ...set }))
                     }));
 
                     exercisesCopy[exerciseIndexToReplace] = response[0];

@@ -1,10 +1,10 @@
 // Structure of ModelPastSet from back end
 
-interface IResponseModelPastSet {
+interface IRMPastSet {
     weight: number;
     reps: number;
     weight_unit: string;
     set_number: number;
 }
 
-export default IResponseModelPastSet; 
+export default IRMPastSet; 

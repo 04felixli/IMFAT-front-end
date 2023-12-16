@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import History from './MainComponents/History';
+import History from './MainComponents/HistoryPage/History';
 import Nutrition from './MainComponents/Nutrition';
 import Profile from './MainComponents/Profile';
 import StartWorkout from './MainComponents/StartWorkout';

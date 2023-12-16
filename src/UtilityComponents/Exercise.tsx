@@ -3,7 +3,7 @@ import React from "react";
 import { add } from "date-fns";
 import { useState, useEffect, useRef } from "react";
 import ConfirmRemoveExercise from "./ConfirmRemoveExercise";
-import ModelExerciseInList from "../Interfaces/ResponseModels/IResponseModelExerciseInList";
+import ModelExerciseInList from "../Interfaces/ResponseModels/IRMExerciseInList";
 import ModelExercise from "../Models/ModelExercise";
 import { fetchAutoFillInfo } from "../MainComponents/lib";
 import ModelSet from "../Models/ModelSet";
@@ -34,12 +34,12 @@ const Exercise = ({ exercises, setExercises, oldExercises, setOldExercises, isCo
     // Auto fill exercise info 
     useEffect(() => {
 
-        let ignore = false;
+        let ignore: boolean = false;
 
         if (addedExerciseIds.length !== exercises.length) {
             const newlyAddedExerciseIds: number[] = addedExerciseIds.slice(exercises.length);
 
-            fetchAutoFillInfo(newlyAddedExerciseIds).then((response) => {
+            fetchAutoFillInfo(newlyAddedExerciseIds).then((response: ModelExercise[]) => {
                 if (!ignore) {
                     setOldExercises(prev => [...prev, ...response]);
 
@@ -57,14 +57,12 @@ const Exercise = ({ exercises, setExercises, oldExercises, setOldExercises, isCo
     }, [addedExerciseIds]);
 
     const addSet = (exerciseIndex: number): void => {
-        setExercises(prevExercises => {
+        setExercises((prevExercises: ModelExercise[]) => {
 
-            const exercisesCopy: ModelExercise[] = prevExercises.map(exercise => ({
+            const exercisesCopy: ModelExercise[] = prevExercises.map((exercise: ModelExercise) => ({
                 ...exercise,
-                sets: exercise.sets.map(set => ({ ...set }))
+                sets: exercise.sets.map((set: ModelSet) => ({ ...set }))
             }));
-
-            // const weight_unit: string = exercisesCopy[exerciseIndex].sets[0].weight_unit;
 
             const weight_unit: string = exercisesCopy[exerciseIndex].sets.length > 0 ? exercisesCopy[exerciseIndex].sets[0].weight_unit : oldExercises[exerciseIndex].sets[0].weight_unit
             const set_number: number = exercisesCopy[exerciseIndex].sets.length + 1;
@@ -84,27 +82,26 @@ const Exercise = ({ exercises, setExercises, oldExercises, setOldExercises, isCo
     };
 
     const handleWeightChange = (set: ModelSet, exerciseIndex: number, setIndex: number, value: string): void => {
-        setExercises(prevExercises => {
+        setExercises((prevExercises: ModelExercise[]) => {
 
-            const exercisesCopy: ModelExercise[] = prevExercises.map(exercise => ({
+            const exercisesCopy: ModelExercise[] = prevExercises.map((exercise: ModelExercise) => ({
                 ...exercise,
-                sets: exercise.sets.map(set => ({ ...set }))
+                sets: exercise.sets.map((set: ModelSet) => ({ ...set }))
             }));
 
             exercisesCopy[exerciseIndex].sets[setIndex].weight = value === '' ? -1 : parseInt(value);
 
             return exercisesCopy
         });
-
     };
 
     const handleRepsChange = (exerciseIndex: number, setIndex: number, value: string): void => {
 
-        setExercises(prevExercises => {
+        setExercises((prevExercises: ModelExercise[]) => {
 
-            const exercisesCopy: ModelExercise[] = prevExercises.map(exercise => ({
+            const exercisesCopy: ModelExercise[] = prevExercises.map((exercise: ModelExercise) => ({
                 ...exercise,
-                sets: exercise.sets.map(set => ({ ...set }))
+                sets: exercise.sets.map((set: ModelSet) => ({ ...set }))
             }));
 
             exercisesCopy[exerciseIndex].sets[setIndex].reps = value === '' ? -1 : parseInt(value);
@@ -124,9 +121,9 @@ const Exercise = ({ exercises, setExercises, oldExercises, setOldExercises, isCo
     }
 
     const handleNotesChange = (exerciseIndex: number, value: string): void => {
-        setExercises(prevExercises => {
+        setExercises((prevExercises: ModelExercise[]) => {
 
-            const exercisesCopy: ModelExercise[] = prevExercises.map(exercise => ({ ...exercise }));
+            const exercisesCopy: ModelExercise[] = prevExercises.map((exercise: ModelExercise) => ({ ...exercise }));
 
             exercisesCopy[exerciseIndex].notes = value;
 
@@ -135,10 +132,10 @@ const Exercise = ({ exercises, setExercises, oldExercises, setOldExercises, isCo
     }
 
     const handleSetCompletion = (exerciseIndex: number, setIndex: number): void => {
-        setExercises(prevExercises => {
-            const exercisesCopy: ModelExercise[] = prevExercises.map(exercise => ({
+        setExercises((prevExercises: ModelExercise[]) => {
+            const exercisesCopy: ModelExercise[] = prevExercises.map((exercise: ModelExercise) => ({
                 ...exercise,
-                sets: exercise.sets.map(set => ({ ...set })),
+                sets: exercise.sets.map((set: ModelSet) => ({ ...set })),
             }));
 
             exercisesCopy[exerciseIndex].sets[setIndex] = {

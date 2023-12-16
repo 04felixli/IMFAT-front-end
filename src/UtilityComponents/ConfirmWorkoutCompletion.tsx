@@ -5,6 +5,7 @@ import GrayBg from "./GrayBg";
 import ModelExercise from "../Models/ModelExercise";
 import ModelWorkout from "../Models/ModelWorkout";
 import { postWorkout } from "../MainComponents/lib";
+import ModelSet from "../Models/ModelSet";
 
 interface Props {
     exercises: ModelExercise[];
@@ -26,24 +27,21 @@ const ConfirmWorkoutCompletion = ({ exercises, setExercises, workoutType, date, 
     const handleFinishWorkout = (): void => {
         if (exercises.length !== 0) {
             const filteredExercises: ModelExercise[] = exercises
-                .map(exercise => ({
+                .map((exercise: ModelExercise) => ({
                     ...exercise,
-                    sets: exercise.sets.map(set => ({ ...set })).filter(set => set.isCompleted === true), // Filter exercises to keep only completed sets
+                    sets: exercise.sets.map((set: ModelSet) => ({ ...set })).filter((set: ModelSet) => set.isCompleted === true), // Filter exercises to keep only completed sets
                 }))
-                .filter(exercise => exercise.sets.length > 0); // Filter out exercises with no completed sets
+                .filter((exercise: ModelExercise) => exercise.sets.length > 0); // Filter out exercises with no completed sets
 
             // Create workout based on filtered exercises
             if (filteredExercises.length > 0) {
                 const workout = new ModelWorkout(workoutType, date, workoutName, duration, filteredExercises);
 
                 postWorkout(workout);
-                console.log("workout has been posted", workout);
             } else {
                 console.log("workout is empty. Nothing has been posted");
             }
 
-            // Clear exercises state
-            // setExercises([]);
         } else {
             console.log("workout is empty. Nothing has been posted");
         }

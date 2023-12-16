@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import GrayBg from './GrayBg';
 import ModelExercise from '../Models/ModelExercise';
+import ModelSet from '../Models/ModelSet';
 
 interface Props {
     set_number: number;
@@ -23,12 +24,12 @@ const SetButtonDropDown = ({ set_number, isCompleted, setExercises, exerciseInde
     const handleSetDeletion = (): void => {
         setExercises(prevExercises => {
 
-            const exercisesCopy: ModelExercise[] = prevExercises.map(exercise => ({
+            const exercisesCopy: ModelExercise[] = prevExercises.map((exercise: ModelExercise) => ({
                 ...exercise,
-                sets: exercise.sets.map(set => ({ ...set }))
+                sets: exercise.sets.map((set: ModelSet) => ({ ...set }))
             }));
 
-            const filteredExercisesCopy = exercisesCopy[exerciseIndex].sets.filter((set, index) => index !== exercisesCopy[exerciseIndex].sets.length - 1);
+            const filteredExercisesCopy = exercisesCopy[exerciseIndex].sets.filter((set: ModelSet, index: number) => index !== exercisesCopy[exerciseIndex].sets.length - 1);
 
             exercisesCopy[exerciseIndex].sets = filteredExercisesCopy;
 
