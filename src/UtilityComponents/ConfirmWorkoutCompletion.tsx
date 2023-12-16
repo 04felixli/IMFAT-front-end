@@ -4,7 +4,7 @@ import React from "react";
 import GrayBg from "./GrayBg";
 import ModelExercise from "../Models/ModelExercise";
 import ModelWorkout from "../Models/ModelWorkout";
-import { postWorkout } from "../MainComponents/lib";
+import { postWorkout } from "../Library/lib";
 import ModelSet from "../Models/ModelSet";
 
 interface Props {

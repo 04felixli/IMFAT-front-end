@@ -1,3 +1,5 @@
+// Structure of ModelPastWorkout<string> in the backend
+
 interface IRMWorkoutHistoryNoDetails {
     id: number;
     type: string;

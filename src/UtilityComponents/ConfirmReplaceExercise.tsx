@@ -15,7 +15,6 @@ const ConfirmReplaceExercise = ({ setShowReplaceExercisePopUp }: Props) => {
 
     const handleReplaceExercise = (): void => {
         setShowReplaceExercisePopUp(false);
-        console.log("Replacing Exercise");
     }
 
     return (

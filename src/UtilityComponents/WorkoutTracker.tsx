@@ -10,7 +10,6 @@ import Exercise from './Exercise';
 import ModelExerciseInList from '../Interfaces/ResponseModels/IRMExerciseInList';
 import ModelExercise from '../Models/ModelExercise';
 import ModelWorkout from '../Models/ModelWorkout';
-import { postWorkout } from '../MainComponents/lib';
 import ConfirmWorkoutCompletion from './ConfirmWorkoutCompletion';
 import ConfirmCancelWorkout from './ConfirmCancelWorkout';
 import ConfirmReplaceExercise from './ConfirmReplaceExercise';

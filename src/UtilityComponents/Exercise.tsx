@@ -5,7 +5,7 @@ import { useState, useEffect, useRef } from "react";
 import ConfirmRemoveExercise from "./ConfirmRemoveExercise";
 import ModelExerciseInList from "../Interfaces/ResponseModels/IRMExerciseInList";
 import ModelExercise from "../Models/ModelExercise";
-import { fetchAutoFillInfo } from "../MainComponents/lib";
+import { fetchAutoFillInfo } from "../Library/lib";
 import ModelSet from "../Models/ModelSet";
 import SetButtonDropDown from "./SetButtonDropDown";
 import ConfirmReplaceExercise from "./ConfirmReplaceExercise";
@@ -47,8 +47,6 @@ const Exercise = ({ exercises, setExercises, oldExercises, setOldExercises, isCo
                 }
             });
         }
-
-        console.log("exercise ids changed")
 
         return () => {
             ignore = true;

@@ -9,7 +9,6 @@ import IRMExerciseHistoryNoDetails from "../Interfaces/ResponseModels/IRMWorkout
 import IRMPastExercise from "../Interfaces/ResponseModels/IRMPastExercise";
 import IRMPastSet from "../Interfaces/ResponseModels/IRMPastSet";
 
-
 const url = process.env.REACT_APP_API_URL;
 
 // This function handles fetching exercises for exercise list

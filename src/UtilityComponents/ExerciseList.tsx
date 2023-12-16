@@ -3,7 +3,7 @@ import './Styles/ExerciseList.css';
 import { useState, useEffect } from 'react';
 import { add, format } from "date-fns";
 // import GrayedBg from './GrayedBg';
-import { fetchExercises, fetchAutoFillInfo } from '../MainComponents/lib';
+import { fetchExercises, fetchAutoFillInfo } from '../Library/lib';
 import ModelExerciseInList from '../Interfaces/ResponseModels/IRMExerciseInList';
 import GrayBg from './GrayBg';
 import ModelExercise from '../Models/ModelExercise';
