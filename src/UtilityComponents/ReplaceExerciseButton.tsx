@@ -52,7 +52,7 @@ const ReplaceExerciseButton = ({ exercises, setExercises, exerciseIndex, setExer
             {isOpen && (<div>
                 <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-90 h-80vh bg-white z-50 flex flex-col items-center">
                     <div>Replace Exercise?</div>
-                    <p className="text-sm">This replaces { } and all of your current progress</p>
+                    <p className="text-sm">This replaces {exercises[exerciseIndex].name} and all of your current progress</p>
                     <div className="flex flex-row justify-around w-full">
                         <button onClick={closePopUp}>Cancel</button>
                         <button onClick={openExerciseList}>Replace</button>

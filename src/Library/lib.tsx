@@ -5,9 +5,10 @@ import ModelExercise from "../Models/ModelExercise";
 import ModelSet from "../Models/ModelSet";
 import ModelWorkout from "../Models/ModelWorkout";
 import axios, { AxiosResponse } from 'axios';
-import IRMExerciseHistoryNoDetails from "../Interfaces/ResponseModels/IRMWorkoutHistoryNoDetails";
+import IRMWorkoutHistory from "../Interfaces/ResponseModels/IRMWorkoutHistory";
 import IRMPastExercise from "../Interfaces/ResponseModels/IRMPastExercise";
 import IRMPastSet from "../Interfaces/ResponseModels/IRMPastSet";
+import ModelWorkoutHistory from "../Models/ModelWorkoutHistory";
 
 const url = process.env.REACT_APP_API_URL;
 
@@ -39,7 +40,7 @@ export const fetchAutoFillInfo = async (addedExerciseIds: number[]): Promise<Mod
             throw new Error(`HTTP Error! Status: ${response.status}`);
         }
 
-        const info = response.data;
+        const info: IRMPastExercise[] = response.data;
 
         const modifiedInfo: ModelExercise[] = info.map((exercise: IRMPastExercise) => {
             const setsWithCompletion: ModelSet[] = exercise.sets.map((set: IRMPastSet) => ({
@@ -78,15 +79,51 @@ export const postWorkout = async (workout: ModelWorkout): Promise<void> => {
     }
 };
 
-export const fetchExerciseHistoryNoDetails = async (): Promise<IRMExerciseHistoryNoDetails[]> => {
+export const fetchWorkoutHistoryNoDetails = async (): Promise<ModelWorkoutHistory<string>[]> => {
     try {
-        const response: AxiosResponse<IRMExerciseHistoryNoDetails[]> = await axios.get(`${url}/api/get_workout_history_without_details`);
+        const response: AxiosResponse<IRMWorkoutHistory<string>[]> = await axios.get(`${url}/api/get_workout_history_without_details`);
 
         if (response.status !== 200) {
             throw new Error(`HTTP Error! Status: ${response.status}`);
         }
 
-        return response.data;
+        const info: IRMWorkoutHistory<string>[] = response.data;
+
+        const modifiedInfo: ModelWorkoutHistory<string>[] = info.map((workoutHistory: IRMWorkoutHistory<string>) => ({ ...workoutHistory }));
+
+        return modifiedInfo;
+
+    } catch (error) {
+        console.error('There was an error fetching exercise history without details: ', error);
+        throw error;
+    }
+}
+
+export const fetchWorkoutHistoryWithDetails = async (workoutId: number | null): Promise<ModelWorkoutHistory<ModelExercise>> => {
+    try {
+        const response: AxiosResponse<IRMWorkoutHistory<IRMPastExercise>> = await axios.get(`${url}/api/get_workout_history_by_workoutId?workout_id=${workoutId}`);
+
+        if (response.status !== 200) {
+            throw new Error(`HTTP Error! Status: ${response.status}`);
+        }
+
+        const workout: IRMWorkoutHistory<IRMPastExercise> = response.data;
+
+        const exercises: ModelExercise[] = workout.exercises_done_in_workout.map((exercise: IRMPastExercise) => {
+            const setsWithCompletion: ModelSet[] = exercise.sets.map((set: IRMPastSet) => ({
+                ...set,
+                isCompleted: true
+            }));
+
+            return ({
+                ...exercise,
+                sets: setsWithCompletion,
+            });
+        });
+
+        const formattedWorkout: ModelWorkoutHistory<ModelExercise> = { ...workout, exercises_done_in_workout: exercises }
+
+        return formattedWorkout;
 
     } catch (error) {
         console.error('There was an error fetching exercise history without details: ', error);

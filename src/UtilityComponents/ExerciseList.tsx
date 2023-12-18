@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { add, format } from "date-fns";
 // import GrayedBg from './GrayedBg';
 import { fetchExercises, fetchAutoFillInfo } from '../Library/lib';
-import ModelExerciseInList from '../Interfaces/ResponseModels/IRMExerciseInList';
+import IRMExerciseInList from '../Interfaces/ResponseModels/IRMExerciseInList';
 import GrayBg from './GrayBg';
 import ModelExercise from '../Models/ModelExercise';
 import ModelSet from '../Models/ModelSet';
@@ -26,7 +26,7 @@ interface Props {
 const ExerciseList = ({ exercises, setExercises, oldExercises, setOldExercises, exerciseIndexToReplace, setExerciseIndexToReplace, addOrReplaceExercise, setAddOrReplaceExercise, isAddExerciseOpen, setIsAddExerciseOpen, setAddedExerciseIds }: Props) => {
 
     // Store the list of exercises
-    const [exerciseList, setExerciseList] = useState<ModelExerciseInList[] | null>(null) // "exercises" = null when first fetching data, [] when api doesn't find any exercises
+    const [exerciseList, setExerciseList] = useState<IRMExerciseInList[] | null>(null) // "exercises" = null when first fetching data, [] when api doesn't find any exercises
     const [selectedExerciseIds, setSelectedExerciseIds] = useState<number[]>([]);
 
     // const [selectedExercises, setSelectedExercises] = useState<ModelExerciseInList[]>([]);
@@ -34,7 +34,7 @@ const ExerciseList = ({ exercises, setExercises, oldExercises, setOldExercises, 
 
     // get list of exercises on user input
     const handleSearchInput = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        fetchExercises(e.target.value).then((response: ModelExerciseInList[]) => {
+        fetchExercises(e.target.value).then((response: IRMExerciseInList[]) => {
             setExerciseList(response);
         });
 
@@ -43,12 +43,12 @@ const ExerciseList = ({ exercises, setExercises, oldExercises, setOldExercises, 
 
     // get initial list of exercises when component first loads
     useEffect(() => {
-        fetchExercises().then((response: ModelExerciseInList[]) => {
+        fetchExercises().then((response: IRMExerciseInList[]) => {
             setExerciseList(response);
         });
     }, []);
 
-    const handleExerciseSelection = (exercise: ModelExerciseInList): void => {
+    const handleExerciseSelection = (exercise: IRMExerciseInList): void => {
 
         if (isSelected(exercise)) {
             if (addOrReplaceExercise === "Add") {
@@ -65,7 +65,7 @@ const ExerciseList = ({ exercises, setExercises, oldExercises, setOldExercises, 
         }
     }
 
-    const isSelected = (exercise: ModelExerciseInList): boolean => {
+    const isSelected = (exercise: IRMExerciseInList): boolean => {
 
         const { id } = exercise;
 
