@@ -6,7 +6,7 @@ import Profile from './MainComponents/Profile';
 import StartWorkout from './MainComponents/StartWorkout';
 import Schedule from './MainComponents/Schedule';
 import NotFound from './MainComponents/NotFound';
-import LogIn from './MainComponents/LogIn';
+import LogIn from './MainComponents/LogInPage/LogIn';
 
 const App: React.FC = () => {
   return (
